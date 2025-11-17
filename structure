@@ -1,0 +1,36 @@
+../drpathcare.fe
+├── App.tsx
+├── eslint.config.js
+├── index.html
+├── index.tsx
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── public
+│   └── robots.txt
+├── src
+│   ├── components
+│   │   ├── FeaturedTests.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Header.tsx
+│   │   ├── HeroSection.tsx
+│   │   ├── TestCategories.tsx
+│   │   └── WhyChooseUs.tsx
+│   ├── context
+│   │   └── CartContext.tsx
+│   └── pages
+│       ├── Cart.tsx
+│       ├── Checkout.tsx
+│       ├── Home.tsx
+│       ├── NotFound.tsx
+│       └── TestCatalog.tsx
+├── structure
+├── styles.css
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite-env.d.ts
+└── vite.config.ts
+
+6 directories, 28 files
