@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { globalApi, customerApi } from "../api/axios";
 import { toast } from "react-toastify";
+import LoginModal from "./LoginModal";
 
 interface SearchItem {
   id: number;
@@ -42,6 +43,7 @@ const SearchBar: React.FC<Props> = ({
   const [results, setResults] = useState<SearchItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const navigate = useNavigate();
 
@@ -102,6 +104,7 @@ const SearchBar: React.FC<Props> = ({
     const user = localStorage.getItem("user");
     if (!user) {
       toast.info("Please login to add items to your cart");
+      setShowLogin(true)
       return;
     }
 
@@ -133,23 +136,29 @@ const SearchBar: React.FC<Props> = ({
             onFocus={handleFocus}
             onBlur={handleBlur}
             placeholder={placeholder}
-            className={`w-full pl-12 pr-4 border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 ${
-              compact ? "h-10 text-sm" : "h-14 text-base"
-            }`}
+            className={`w-full pl-12 pr-4 border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 ${compact ? "h-10 text-sm" : "h-14 text-base"
+              }`}
           />
         </div>
 
         {/* Adjusted button for compact + normal height */}
         <button
           onClick={() => doSearch.flush?.() && doSearch(query)}
-          className={`bg-primary text-white rounded-r-lg hover:bg-secondary transition-colors font-medium ${
-            compact ? "px-3 py-2" : "px-8 py-4"
-          }`}
+          className={`bg-primary text-white rounded-r-lg hover:bg-secondary transition-colors font-medium ${compact ? "px-3 py-2" : "px-8 py-4"
+            }`}
         >
           Search
         </button>
       </div>
 
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        onLoginSuccess={(user) => {
+          console.log("Logged in:", user);
+          window.location.reload()
+        }}
+      />
       {/* Dropdown Results */}
       <AnimatePresence>
         {open && (

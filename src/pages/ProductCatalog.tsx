@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import { globalApi, customerApi } from "../api/axios";
 import { toast } from "react-toastify";
+import LoginModal from "../components/LoginModal";
 //import { useCart } from "../context/CartContext";
 
 interface Product {
@@ -61,6 +62,7 @@ const ProductCatalog: React.FC = () => {
   const [nextPage, setNextPage] = useState<string | null>(null);
   const [prevPage, setPrevPage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   const fetchCategories = async () => {
     try {
@@ -155,6 +157,14 @@ const ProductCatalog: React.FC = () => {
 
   // 🛒 Add to Cart (FIXED)
   const handleAddToCart = async (product: Product) => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      toast.info("Please login to add items to your cart.");
+      setShowLogin(true)
+      return;
+    }
+
+    if (!product) return;
     try {
       await customerApi.post("carts/", {
         product_type:
@@ -176,6 +186,15 @@ const ProductCatalog: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
+
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        onLoginSuccess={(user) => {
+          console.log("Logged in:", user);
+          window.location.reload()
+        }}
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Title */}
@@ -301,8 +320,8 @@ const ProductCatalog: React.FC = () => {
                 onClick={() => prevPage && fetchProducts(prevPage)}
                 disabled={!prevPage}
                 className={`flex items-center px-4 py-2 rounded-md border ${prevPage
-                    ? "bg-white text-gray-700 hover:bg-gray-100"
-                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  ? "bg-white text-gray-700 hover:bg-gray-100"
+                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
                   }`}
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -312,8 +331,8 @@ const ProductCatalog: React.FC = () => {
                 onClick={() => nextPage && fetchProducts(nextPage)}
                 disabled={!nextPage}
                 className={`flex items-center px-4 py-2 rounded-md border ${nextPage
-                    ? "bg-white text-gray-700 hover:bg-gray-100"
-                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  ? "bg-white text-gray-700 hover:bg-gray-100"
+                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
                   }`}
               >
                 Next

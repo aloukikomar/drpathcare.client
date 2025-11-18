@@ -11,6 +11,7 @@ import { globalApi, customerApi } from "../api/axios";
 import { toast } from "react-toastify";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import LoginModal from "../components/LoginModal";
 
 interface Product {
   id: number;
@@ -56,6 +57,7 @@ const ProductDetails: React.FC = () => {
   const { product_type, id } = useParams<{ product_type: string; id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   const currentType = product_type as "labtest" | "profile" | "package";
 
@@ -88,6 +90,7 @@ const ProductDetails: React.FC = () => {
     const user = localStorage.getItem("user");
     if (!user) {
       toast.info("Please login to add items to your cart.");
+      setShowLogin(true)
       return;
     }
 
@@ -99,8 +102,8 @@ const ProductDetails: React.FC = () => {
           currentType === "labtest"
             ? "LabTest"
             : currentType === "profile"
-            ? "Profile"
-            : "Package",
+              ? "Profile"
+              : "Package",
         product_id: product.id,
       });
 
@@ -116,6 +119,15 @@ const ProductDetails: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header showSearch />
+
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        onLoginSuccess={(user) => {
+          console.log("Logged in:", user);
+          window.location.reload()
+        }}
+      />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
@@ -203,7 +215,7 @@ const ProductDetails: React.FC = () => {
                         Save ₹
                         {Math.round(
                           parseFloat(product.price) -
-                            parseFloat(product.offer_price)
+                          parseFloat(product.offer_price)
                         )}
                       </span>
                     </>

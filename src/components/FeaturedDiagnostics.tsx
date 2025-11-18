@@ -8,6 +8,7 @@ import {
 import { globalApi, customerApi } from "../api/axios";
 import { toast } from "react-toastify";
 import ProductCard from "./ProductCard";
+import LoginModal from "./LoginModal";
 
 interface Product {
   id: number;
@@ -49,6 +50,7 @@ const FeaturedDiagnostics: React.FC = () => {
   const [activeTab, setActiveTab] = useState("lab-tests");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   // 🧭 Fetch Featured Products
   useEffect(() => {
@@ -72,6 +74,7 @@ const FeaturedDiagnostics: React.FC = () => {
     const user = localStorage.getItem("user");
     if (!user) {
       toast.info("Please login to add items to your cart");
+      setShowLogin(true)
       return;
     }
 
@@ -111,11 +114,10 @@ const FeaturedDiagnostics: React.FC = () => {
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-t-lg transition-colors whitespace-nowrap font-medium ${
-                  isActive
+                className={`flex items-center space-x-2 px-4 py-2 rounded-t-lg transition-colors whitespace-nowrap font-medium ${isActive
                     ? `bg-white border-b-2 border-primary text-primary`
                     : `${tab.color} opacity-80 hover:opacity-100`
-                }`}
+                  }`}
               >
                 {tab.icon}
                 <span>{tab.label}</span>
@@ -143,6 +145,15 @@ const FeaturedDiagnostics: React.FC = () => {
             ))}
           </div>
         )}
+
+        <LoginModal
+          isOpen={showLogin}
+          onClose={() => setShowLogin(false)}
+          onLoginSuccess={(user) => {
+            console.log("Logged in:", user);
+            window.location.reload()
+          }}
+        />
 
         {/* View All */}
         <div className="text-center mt-12">
