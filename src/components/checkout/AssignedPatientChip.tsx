@@ -18,10 +18,19 @@ const AssignedPatientChip: React.FC<Props> = ({
   const initials = `${patient.first_name?.[0] ?? ""}${patient.last_name?.[0] ?? ""}`.toUpperCase();
 
   return (
-    <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full text-sm shadow-sm">
+    <div className="
+      flex items-center gap-2 
+      bg-primary/10 border border-primary/30 
+      px-3 py-1.5 rounded-full text-sm shadow-sm
+    ">
       
       {/* Avatar */}
-      <div className="w-6 h-6 rounded-full bg-blue-200 text-blue-800 flex items-center justify-center text-xs font-bold">
+      <div className="
+        w-6 h-6 rounded-full 
+        bg-primary/20 text-primary 
+        flex items-center justify-center 
+        text-xs font-bold
+      ">
         {initials}
       </div>
 
@@ -31,21 +40,31 @@ const AssignedPatientChip: React.FC<Props> = ({
         {patient.last_name ? ` ${patient.last_name}` : ""}
       </div>
 
-      {/* Hide these buttons in readonly mode */}
+      {/* Hide edit/remove in readonly mode */}
       {!readonly && (
         <>
+          {/* EDIT */}
           <button
             onClick={onEdit}
-            className="text-gray-500 hover:text-blue-600"
             title="Edit patient"
+            className="
+              text-gray-500 
+              hover:text-primary 
+              transition-colors
+            "
           >
             <Pencil className="w-4 h-4" />
           </button>
 
+          {/* REMOVE */}
           <button
             onClick={onRemove}
-            className="text-gray-500 hover:text-red-600"
             title="Remove patient"
+            className="
+              text-gray-500 
+              hover:text-red-600 
+              transition-colors
+            "
           >
             <X className="w-4 h-4" />
           </button>

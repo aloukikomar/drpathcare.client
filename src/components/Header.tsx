@@ -74,84 +74,107 @@ const Header: React.FC<HeaderProps> = ({ showSearch = false }) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            {/* <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">DP</span>
             </div>
             <span className="font-inter font-bold text-xl text-gray-900">
               Dr Pathcare
-            </span>
+            </span> */}
+            <img
+              src="/icons/logo1.png"
+              // alt="Book via phone"
+              className="mt-7 w-36 h-24 object-contain"
+            />
           </Link>
 
           {/* 🔹 Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
-              className={`font-medium transition-colors ${isActive("/") ? "text-primary" : "text-gray-700 hover:text-primary"
-                }`}
+              className={`
+      font-medium transition-colors
+      ${isActive("/") ? "text-primary" : "text-gray-700 hover:text-primary"}
+    `}
             >
               Home
             </Link>
+
             <Link
               to="/products?product_type=lab_test"
-              className={`font-medium transition-colors ${location.search.includes("lab_test")
-                ? "text-primary"
-                : "text-gray-700 hover:text-primary"
-                }`}
+              className={`
+      font-medium transition-colors
+      ${location.search.includes("lab_test")
+                  ? "text-primary"
+                  : "text-gray-700 hover:text-primary"}
+    `}
             >
               Lab Tests
             </Link>
-            <Link
-              to="/products?product_type=lab_profile"
-              className={`font-medium transition-colors ${location.search.includes("lab_profile")
-                ? "text-primary"
-                : "text-gray-700 hover:text-primary"
-                }`}
-            >
-              Lab Profiles
-            </Link>
+
             <Link
               to="/products?product_type=lab_package"
-              className={`font-medium transition-colors ${location.search.includes("lab_package")
-                ? "text-primary"
-                : "text-gray-700 hover:text-primary"
-                }`}
+              className={`
+      font-medium transition-colors
+      ${location.search.includes("lab_package")
+                  ? "text-primary"
+                  : "text-gray-700 hover:text-primary"}
+    `}
             >
               Packages
             </Link>
+
             <Link
               to="/about"
-              className={`font-medium transition-colors ${isActive("/about")
-                ? "text-primary"
-                : "text-gray-700 hover:text-primary"
-                }`}
+              className={`
+      font-medium transition-colors
+      ${isActive("/about")
+                  ? "text-primary"
+                  : "text-gray-700 hover:text-primary"}
+    `}
             >
               About
             </Link>
           </nav>
 
+
+
           {/* 🔹 Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Cart */}
-            <Link
-              to="/cart"
-              className="p-2 text-gray-600 hover:text-primary transition-colors relative"
-              aria-label="Shopping cart"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
 
             {/* Account / Login */}
             {user ? (
               <div className="flex items-center space-x-2">
-                <User className="w-5 h-5 text-gray-600" />
+                {/* Cart */}
+                <Link
+                  to="/cart"
+                  className="p-2 text-gray-600 hover:text-primary transition-colors relative"
+                  aria-label="Shopping cart"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
+                <Link
+                  to="/account"
+                  className="p-2 text-gray-600 hover:text-primary transition-colors relative"
+                  aria-label="User"
+                >
+                  <User className="w-5 h-5" />
+                </Link>
+
                 <button
                   onClick={handleLogout}
-                  className="text-gray-700 hover:text-primary font-medium transition-colors"
+                  className="
+                            px-4 py-2 rounded-lg text-white font-medium
+                            bg-primary
+                            transition-all
+                            hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                            hover:shadow-md
+                            active:scale-[.98]
+                          "
                 >
                   Logout
                 </button>
@@ -159,7 +182,14 @@ const Header: React.FC<HeaderProps> = ({ showSearch = false }) => {
             ) : (
               <button
                 onClick={() => setShowLogin(true)}
-                className="bg-primary text-white px-4 py-2 rounded-lg"
+                className="
+                          px-4 py-2 rounded-lg text-white font-medium
+                          bg-primary
+                          transition-all
+                          hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                          hover:shadow-md
+                          active:scale-[.98]
+                        "
               >
                 Login / Signup
               </button>
@@ -178,7 +208,7 @@ const Header: React.FC<HeaderProps> = ({ showSearch = false }) => {
 
         {/* 🔍 Search Bar (below nav, optional) */}
         {showSearch && (
-          <div className="border-t border-gray-100 py-3 bg-gray-50">
+          <div className="border-t border-gray-100 py-2 bg-gray-50">
             <div className="max-w-3xl mx-auto px-2 sm:px-0">
               <SearchBar compact />
             </div>
@@ -204,9 +234,6 @@ const Header: React.FC<HeaderProps> = ({ showSearch = false }) => {
               <Link to="/products?product_type=lab_test" className="text-gray-700 hover:text-primary font-medium">
                 Lab Tests
               </Link>
-              <Link to="/products?product_type=lab_profile" className="text-gray-700 hover:text-primary font-medium">
-                Lab Profiles
-              </Link>
               <Link to="/products?product_type=lab_package" className="text-gray-700 hover:text-primary font-medium">
                 Packages
               </Link>
@@ -215,28 +242,56 @@ const Header: React.FC<HeaderProps> = ({ showSearch = false }) => {
               </Link>
 
               <div className="flex flex-col space-y-3 pt-4 border-t border-gray-100">
-                <Link to="/cart" className="flex items-center space-x-2 text-gray-700">
-                  <ShoppingCart className="w-5 h-5" />
-                  <span>Cart ({cartCount})</span>
-                </Link>
+                {user ? (
+                  <Link to="/cart" className="flex items-center space-x-2 text-gray-700 hover:text-primary">
+                    <ShoppingCart className="w-5 h-5" />
+                    <span>Cart ({cartCount})</span>
+                  </Link>
+                ) : null}
+                {user ? (
+                  <Link to="/account" className="flex items-center space-x-2 text-gray-700 hover:text-primary">
+                    <User className="w-5 h-5" />
+                    <span>Account</span>
+                  </Link>
+                ) : null}
 
                 {user ? (
-                  <button onClick={handleLogout} className="flex items-center space-x-2 text-gray-700">
-                    <User className="w-5 h-5" />
-                    <span>Logout</span>
+                  <button
+                    onClick={handleLogout}
+                    className="
+                                px-4 py-2 rounded-lg text-white font-medium
+                                bg-primary
+                                transition-all
+                                hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                                hover:shadow-md
+                                active:scale-[.98]
+                              "
+                  >
+                    Logout
                   </button>
                 ) : (
-                  <button onClick={() => setShowLogin(true)} className="bg-primary text-white px-4 py-2 rounded-lg">
+                  <button
+                    onClick={() => setShowLogin(true)}
+                    className="
+                                px-4 py-2 rounded-lg text-white font-medium
+                                bg-primary
+                                transition-all
+                                hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                                hover:shadow-md
+                                active:scale-[.98]
+                              "
+                  >
                     Login / Signup
                   </button>
                 )}
+
               </div>
 
-              {showSearch && (
+              {/* {showSearch && (
                 <div className="pt-4 border-t border-gray-100">
                   <SearchBar compact />
                 </div>
-              )}
+              )} */}
             </nav>
           </div>
         )}

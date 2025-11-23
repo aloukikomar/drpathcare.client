@@ -114,7 +114,7 @@ export default function AddressModal({
       is_default: isDefault,
       location_id: selectedLocation.id,
     };
-    
+
     // include user id only if adding from customer side
     if (customerId) payload.user_id = customerId;
 
@@ -245,11 +245,21 @@ export default function AddressModal({
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 bg-blue-600 text-white rounded py-2 disabled:opacity-60"
             disabled={loading}
+            className="
+    flex-1 rounded py-2 text-white font-medium
+    transition-all
+    bg-primary
+    disabled:opacity-60 disabled:cursor-not-allowed
+
+    hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+    hover:shadow-sm
+    active:scale-[.98]
+  "
           >
             {loading ? "Saving..." : address ? "Update" : "Save"}
           </button>
+
         </div>
       </div>
     </div>

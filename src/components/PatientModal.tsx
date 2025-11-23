@@ -62,7 +62,7 @@ export default function PatientModal({
                     id:editingPatient.id,
                     first_name: form.first_name,
                     last_name: form.last_name,
-                    mobile: form.mobile,
+                    alt_mobile: form.mobile,
                     email: form.email,
                     gender: form.gender,
                     age: form.age ? Number(form.age) : null,
@@ -71,11 +71,12 @@ export default function PatientModal({
                 toast.success("Patient updated");
             } else {
                 // create
+                
                 const payload = {
                     user: customerId,
                     first_name: form.first_name,
                     last_name: form.last_name,
-                    mobile: form.mobile,
+                    alt_mobile: form.mobile,
                     email: form.email,
                     gender: form.gender,
                     age: form.age ? Number(form.age) : null,

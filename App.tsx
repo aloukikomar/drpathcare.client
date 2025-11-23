@@ -11,6 +11,9 @@ import ProductDetails from "./src/pages/ProductDetails";
 import Cart from "./src/pages/Cart";
 import Checkout from "./src/pages/Checkout";
 import NotFound from "./src/pages/NotFound";
+import Account from "./src/pages/AccountPage";
+import AboutPage from "./src/pages/AboutPage";
+import BookingViewPage from "./src/pages/BookingViewPage"; // ✅ NEW IMPORT
 
 const App: React.FC = () => {
   return (
@@ -20,9 +23,18 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductCatalog />} />
-            <Route path="/product-details/:product_type/:id" element={<ProductDetails />} />
+            <Route
+              path="/product-details/:product_type/:id"
+              element={<ProductDetails />}
+            />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/account" element={<Account />} />
+
+            {/* ✅ NEW ROUTE FOR BOOKING VIEW */}
+            <Route path="/booking/:id" element={<BookingViewPage />} />
+
+            <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
 

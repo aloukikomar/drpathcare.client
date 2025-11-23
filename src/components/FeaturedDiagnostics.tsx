@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   TestTubeDiagonal,
-  Microscope,
   ClipboardList,
 } from "lucide-react";
 import { globalApi, customerApi } from "../api/axios";
@@ -30,13 +29,13 @@ const tabs = [
     icon: <TestTubeDiagonal className="w-6 h-6 text-blue-600" />,
     color: "text-blue-600 border-blue-600",
   },
-  {
-    label: "Profiles",
-    value: "lab-profiles",
-    type: "Profile",
-    icon: <Microscope className="w-6 h-6 text-green-600" />,
-    color: "text-green-600 border-green-600",
-  },
+  // {
+  //   label: "Profiles",
+  //   value: "lab-profiles",
+  //   type: "Profile",
+  //   icon: <Microscope className="w-6 h-6 text-green-600" />,
+  //   color: "text-green-600 border-green-600",
+  // },
   {
     label: "Packages",
     value: "lab-packages",
@@ -115,8 +114,8 @@ const FeaturedDiagnostics: React.FC = () => {
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-t-lg transition-colors whitespace-nowrap font-medium ${isActive
-                    ? `bg-white border-b-2 border-primary text-primary`
-                    : `${tab.color} opacity-80 hover:opacity-100`
+                  ? `bg-white border-b-2 border-primary text-primary`
+                  : `${tab.color} opacity-80 hover:opacity-100`
                   }`}
               >
                 {tab.icon}
@@ -158,8 +157,15 @@ const FeaturedDiagnostics: React.FC = () => {
         {/* View All */}
         <div className="text-center mt-12">
           <Link
-            to={`/products?product_type=${activeTab.replace("lab-", "lab_")}`}
-            className="inline-flex items-center bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition font-medium"
+            to={`/products?product_type=${activeTab.replace("lab-", "lab_").replace("lab_tests","lab_test")}`}
+            className="
+                      inline-flex items-center px-8 py-3 rounded-lg font-medium
+                      text-white bg-primary
+                      transition-all
+                      hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                      hover:shadow-md
+                      active:scale-95
+                    "
           >
             View All {currentTab?.label}
           </Link>

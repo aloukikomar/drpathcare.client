@@ -2,23 +2,57 @@ import React, { useState, useEffect } from "react";
 import { Shield, Clock, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "../components/SearchBar";
+import { customerApi } from "../api/axios";
 
 const HeroSection: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showPhoneModal, setShowPhoneModal] = useState(false);
+  const [banners, setBanners] = useState<string[]>([]);
 
-  const images = [
-    "https://drpathcare.com/crm/public/uploads/banner/dr_path_carea0d1c5daefdf74802f83433813392e30.png",
-    "https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  ];
 
+  // ---------------------------
+  // FETCH BANNERS FROM API
+  // ---------------------------
   useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const res = await customerApi.get("client/content/?tag_type=banner");
+        const list = res?.results || [];
+
+        const imgs = list
+          .filter((x: any) => x.file_url)
+          .map((x: any) => x.file_url);
+        // If API returns nothing, fallback to the old 3 images
+        setBanners(
+          imgs.length > 0
+            ? imgs
+            : [
+              "https://drpathcare.com/crm/public/uploads/banner/dr_path_carea0d1c5daefdf74802f83433813392e30.png",
+              "https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=800&q=80",
+              "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=800&q=80",
+            ]
+        );
+      } catch (err) {
+        console.error("Failed to fetch banners", err);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
+  // --------------------------------
+  // Auto slideshow every 3 seconds
+  // --------------------------------
+  useEffect(() => {
+    if (banners.length === 0) return;
+
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
+      setCurrentImageIndex((prev) => (prev + 1) % banners.length);
+    }, 4000);
+
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [banners]);
+
 
   return (
     <section className="relative bg-gradient-to-br from-blue-50 to-sky-50 py-16 lg:py-24">
@@ -93,8 +127,8 @@ const HeroSection: React.FC = () => {
                   </p>
 
                   <div className="space-y-2 text-gray-800">
-                    <p className="font-medium">📞 +91-9876543210</p>
-                    <p className="font-medium">📞 +91-9123456789</p>
+                    <p className="font-medium">📞 +918447007794</p>
+                    <p className="font-medium">📞 &nbsp;&nbsp;&nbsp;0120-4207810</p>
                   </div>
 
                   <button
@@ -144,31 +178,45 @@ const HeroSection: React.FC = () => {
           {/* Slideshow Banner */}
           <div className="hidden lg:block relative">
             <div className="relative w-full h-96 lg:h-[500px] overflow-hidden rounded-2xl shadow-2xl">
-              <AnimatePresence>
-                <motion.img
-                  key={currentImageIndex}
-                  src={images[currentImageIndex]}
-                  alt="Medical professional with lab equipment"
-                  className="w-full h-full object-cover"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                  loading="lazy"
-                />
-              </AnimatePresence>
+
+              <div className="absolute inset-0">
+                <AnimatePresence>
+                  <motion.img
+                    key={currentImageIndex}
+                    src={banners[currentImageIndex]}
+                    alt="Banner"
+                    className="absolute inset-0 w-full h-full object-cover"
+
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+
+                    transition={{
+                      opacity: { duration: 0.8, ease: "easeInOut" },
+                      scale: { duration: 3, ease: "easeOut" }
+                    }}
+
+                    loading="lazy"
+                  />
+                </AnimatePresence>
+              </div>
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {images.map((_, index) => (
+
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                {banners.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-colors ${index === currentImageIndex ? "bg-white" : "bg-white/50"}`}
+                    className={`w-3 h-3 rounded-full transition-colors ${index === currentImageIndex ? "bg-white" : "bg-white/50"
+                      }`}
                   />
                 ))}
               </div>
+
             </div>
           </div>
+
         </div>
       </div>
     </section>

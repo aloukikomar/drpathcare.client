@@ -18,7 +18,7 @@ interface TypedAxiosInstance {
 }
 
 /* ---------------------------------------------------
-   Helper: Create a clean Axios instance with unwrapped JSON
+   Helper: Create a clean Axios instance with unified handling
 ---------------------------------------------------- */
 const createApiInstance = (): TypedAxiosInstance => {
   const instance = axios.create({
@@ -27,16 +27,37 @@ const createApiInstance = (): TypedAxiosInstance => {
     headers: { "Content-Type": "application/json" },
   });
 
-  /* -------------------------
-     RESPONSE INTERCEPTOR
-     - Accept ALL 2xx
-     - Always unwrap response.data
-  -------------------------- */
+  /* ---------------------------------------------------
+     RESPONSE INTERCEPTOR  (✔ unified)
+     - unwrap all successful responses
+     - handle 401 logout globally
+     - handle backend error messages
+  ---------------------------------------------------- */
   instance.interceptors.response.use(
-    (res: AxiosResponse) => res.data, // unwrap
-    (error: AxiosError) => {
-      const serverError = (error.response?.data as any)?.detail ||
-                          (error.response?.data as any)?.message;
+    (response: AxiosResponse) => {
+      return response.data; // always unwrap
+    },
+
+    async (error: AxiosError) => {
+      const status = error.response?.status;
+
+      // 🔥 GLOBAL 401 HANDLING — ALWAYS WORKS
+      if (status === 401) {
+        console.warn("401 Unauthorized — clearing session…");
+
+        localStorage.removeItem("user");
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+
+        // Hard reload to login/homepage
+        window.location.href = "/";
+        return;
+      }
+
+      // Extract backend error message
+      const serverError =
+        (error.response?.data as any)?.detail ||
+        (error.response?.data as any)?.message;
 
       const msg =
         serverError ||
@@ -61,9 +82,9 @@ export const globalApi = createApiInstance();
 ---------------------------------------------------- */
 export const customerApi = createApiInstance();
 
-/* -------------------------
-   REQUEST INTERCEPTOR (Auth)
--------------------------- */
+/* ---------------------------------------------------
+   REQUEST INTERCEPTOR (Auth Token)
+---------------------------------------------------- */
 (customerApi as any).interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem("access");
@@ -74,28 +95,6 @@ export const customerApi = createApiInstance();
     return config;
   },
   (error: AxiosError) => Promise.reject(error)
-);
-
-/* -------------------------
-   RESPONSE INTERCEPTOR (401 handler)
--------------------------- */
-(customerApi as any).interceptors.response.use(
-  (res: any) => res, // res is already unwrapped JSON
-  async (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // Clean tokens
-      localStorage.removeItem("user");
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-
-      // Silent fallback — no navigate() here
-      console.warn("Authentication expired. Clearing session.");
-
-      // Force hard reload to login page
-      window.location.href = "/";
-    }
-    return Promise.reject(error);
-  }
 );
 
 export default globalApi;

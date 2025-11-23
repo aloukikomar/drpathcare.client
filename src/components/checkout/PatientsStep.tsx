@@ -49,7 +49,7 @@ const PatientsStep: React.FC<{
         List Filtering
     -------------------------------- */
     const filtered = patientsList.filter((p: any) =>
-        `${p.first_name} ${p.last_name ?? ""} ${p.mobile ?? ""}`
+        `${p.first_name} ${p.last_name ?? ""} ${p.alt_mobile ?? ""}`
             .toLowerCase()
             .includes(searchText.toLowerCase())
     );
@@ -161,7 +161,7 @@ const PatientsStep: React.FC<{
                                                             className="px-3 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-3"
                                                         >
                                                             {/* Avatar */}
-                                                            <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold text-xs">
+                                                            <div className="w-8 h-8 rounded-full bg-primary/20 text-primary  flex items-center justify-center font-semibold text-xs">
                                                                 {p.first_name?.[0]}
                                                                 {p.last_name?.[0]}
                                                             </div>
@@ -172,7 +172,7 @@ const PatientsStep: React.FC<{
                                                                 </span>
                                                                 <span className="text-xs text-gray-500">
                                                                     {p.gender} • {p.age}
-                                                                    {p.mobile ? ` • ${p.mobile}` : ""}
+                                                                    {p.alt_mobile ? ` • ${p.alt_mobile}` : ""}
                                                                 </span>
                                                             </div>
                                                         </div>

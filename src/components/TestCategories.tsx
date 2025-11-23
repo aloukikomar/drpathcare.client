@@ -96,7 +96,7 @@ const TestCategories: React.FC = () => {
             <Link
               key={category.id}
               to={`/products?category=${category.id}`}
-              className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all duration-300 group"
+              className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-primary transition-all duration-300 group"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${category.color} group-hover:scale-110 transition-transform duration-300`}>
@@ -106,11 +106,21 @@ const TestCategories: React.FC = () => {
                   {category.testCount} tests
                 </span>
               </div>
-              
-              <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+
+              <h3
+                className="
+    font-semibold text-lg mb-2 text-gray-900 
+    transition-all 
+    group-hover:text-transparent 
+    group-hover:bg-clip-text 
+    group-hover:bg-gradient-to-r 
+    group-hover:from-primary 
+    group-hover:to-secondary
+  "
+              >
                 {category.name}
               </h3>
-              
+
               <p className="text-gray-600 text-sm">
                 {category.description}
               </p>
@@ -121,13 +131,30 @@ const TestCategories: React.FC = () => {
         <div className="text-center mt-12">
           <Link
             to="/categories"
-            className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
+            className="
+                      inline-flex items-center font-medium
+                      text-primary
+                      transition-all
+                      hover:text-transparent hover:bg-clip-text
+                      hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                    "
           >
             View All Categories
-            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="ml-2 w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </Link>
+
         </div>
       </div>
     </section>

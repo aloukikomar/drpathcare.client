@@ -224,11 +224,19 @@ const ProductDetails: React.FC = () => {
 
                 <button
                   onClick={handleAddToCart}
-                  className="flex items-center justify-center bg-primary text-white py-3 rounded-lg hover:bg-secondary transition-all font-medium"
+                  className="
+                            flex items-center justify-center py-3 rounded-lg font-medium text-white
+                            bg-primary
+                            transition-all
+                            hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                            hover:shadow-md
+                            active:scale-[.98]
+                          "
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   Add to Cart
                 </button>
+
               </div>
             </div>
 

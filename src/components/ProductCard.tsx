@@ -128,16 +128,31 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="flex items-center gap-2">
           <Link
             to={`/product-details/${productType.toLowerCase()}/${id}`}
-            className="flex-1 text-center bg-primary text-white py-2 rounded-lg hover:bg-secondary transition text-sm font-medium"
+            className="
+                      flex-1 text-center rounded-lg py-2 text-sm font-medium
+                      text-white bg-primary 
+                      transition-all
+                      hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                      hover:shadow-md
+                      active:scale-95
+                    "
           >
             View Details
           </Link>
+
           <button
             onClick={() => onAddToCart(product)}
-            className="bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition flex items-center justify-center w-10 h-10"
             title="Add to Cart"
+            className="
+                      w-10 h-10 rounded-lg flex items-center justify-center
+                      bg-gray-100 text-gray-700
+                      transition-all
+                      hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white
+                      hover:shadow-md
+                      active:scale-95
+                    "
           >
-            <ShoppingCart className="w-4 h-4 text-gray-700" />
+            <ShoppingCart className="w-4 h-4" />
           </button>
         </div>
       </div>

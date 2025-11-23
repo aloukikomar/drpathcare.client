@@ -19,6 +19,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
+    const [age, setAge] = useState("18");
     const [gender, setGender] = useState("Male");
 
     useEffect(() => {
@@ -139,10 +140,19 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition font-medium"
+                            className="
+                                        w-full py-3 rounded-lg text-white font-medium
+                                        bg-primary
+                                        transition-all
+                                        hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                                        hover:shadow-md
+                                        active:scale-[.98]
+                                        disabled:opacity-50 disabled:cursor-not-allowed
+                                    "
                         >
                             {loading ? "Sending..." : "Get OTP"}
                         </button>
+
                         <p className="text-sm text-center text-gray-500">
                             You’ll receive an OTP on your registered mobile number.
                         </p>
@@ -186,7 +196,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition font-medium"
+                            className="
+                                        w-full py-3 rounded-lg text-white font-medium
+                                        bg-primary
+                                        transition-all
+                                        hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                                        hover:shadow-md
+                                        active:scale-[.98]
+                                        disabled:opacity-50 disabled:cursor-not-allowed
+                                    "
                         >
                             {loading ? "Verifying..." : "Verify & Login"}
                         </button>
@@ -230,30 +248,59 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
                             placeholder="Email (optional)"
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary"
                         />
-                        <select
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary"
-                        >
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        {timer > 0 ? (
-                            <span className="text-sm text-gray-500">Resend in {timer}s</span>
-                        ) : (
+                        <div className="grid grid-cols-2 gap-3">
+                            <input
+                                type="age"
+                                value={age}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/\D/g, "").slice(0, 2);
+                                    setAge(value);
+                                }}
+                                placeholder="Age (optional)"
+                                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary"
+                            />
+                            <select
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary"
+                            >
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            {timer > 0 ? (
+                                <span className="text-sm text-gray-500">Resend in {timer}s</span>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={handleSendOtp}
+                                    className="text-primary text-sm font-medium"
+                                >
+                                    Resend OTP
+                                </button>
+                            )}
                             <button
                                 type="button"
-                                onClick={handleSendOtp}
-                                className="text-primary text-sm font-medium"
+                                onClick={() => setStep("mobile")}
+                                className="text-gray-500 text-sm"
                             >
-                                Resend OTP
+                                Change Number
                             </button>
-                        )}
+                        </div>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition font-medium"
+                            className="
+                                        w-full py-3 rounded-lg text-white font-medium
+                                        bg-primary
+                                        transition-all
+                                        hover:bg-gradient-to-r hover:from-primary hover:to-secondary
+                                        hover:shadow-md
+                                        active:scale-[.98]
+                                        disabled:opacity-50 disabled:cursor-not-allowed
+                                    "
                         >
                             {loading ? "Verifying..." : "Register & Continue"}
                         </button>

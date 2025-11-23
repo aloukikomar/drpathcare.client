@@ -103,7 +103,9 @@ const SearchBar: React.FC<Props> = ({
 
     const user = localStorage.getItem("user");
     if (!user) {
-      toast.info("Please login to add items to your cart");
+      toast.info("Please login to add items to your cart", {
+  position: "top-center",
+});
       setShowLogin(true)
       return;
     }
@@ -144,8 +146,15 @@ const SearchBar: React.FC<Props> = ({
         {/* Adjusted button for compact + normal height */}
         <button
           onClick={() => doSearch.flush?.() && doSearch(query)}
-          className={`bg-primary text-white rounded-r-lg hover:bg-secondary transition-colors font-medium ${compact ? "px-3 py-2" : "px-8 py-4"
-            }`}
+          className={`rounded-r-lg text-white font-medium transition-all
+                        bg-primary
+                        hover:bg-gradient-to-r 
+                        hover:from-primary 
+                        hover:to-secondary 
+                        hover:shadow-md
+                        active:scale-[.98]
+                        ${compact ? "px-3 py-2" : "px-8 py-4"}
+                      `}
         >
           Search
         </button>
@@ -194,11 +203,18 @@ const SearchBar: React.FC<Props> = ({
 
                   <button
                     onClick={(e) => handleAddToCart(e, item)}
-                    className="flex items-center justify-center w-9 h-9 rounded-md bg-gray-100 hover:bg-gray-200"
+                    className="
+                      w-10 h-10 rounded-lg flex items-center justify-center
+                      bg-gray-100 text-gray-700
+                      transition-all
+                      hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white
+                      hover:shadow-md
+                      active:scale-95
+                    "
                     title="Add to Cart"
                     aria-label={`Add ${item.name} to cart`}
                   >
-                    <ShoppingCart className="w-4 h-4 text-gray-700" />
+                    <ShoppingCart className="w-4 h-4" />
                   </button>
                 </div>
               ))

@@ -1,13 +1,10 @@
 // src/pages/Checkout.tsx
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  CheckCircle,
-} from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { CheckoutProvider, useCheckout } from "../context/CheckoutContext";
-// import StepHeader from "../components/checkout/StepHeader";
 import AddressStep from "../components/checkout/AddressStep";
 import ScheduleStep from "../components/checkout/ScheduleStep";
 import PatientsStep from "../components/checkout/PatientsStep";
@@ -36,15 +33,15 @@ const CheckoutInner: React.FC = () => {
   const [bookingCreated, setBookingCreated] = useState(false);
   const [bookingId, setBookingId] = useState<string>("");
 
-  // used by child to open modal in create mode
+  // open patient modal
   const openPatientModal = (item: any, editPatient?: any) => {
     setPatientModalForItem(item);
     setPatientEditData(editPatient ?? null);
     setPatientModalOpen(true);
   };
 
+  // create booking
   const createBooking = async () => {
-    // validate
     if (!selectedAddress) return toast.error("Please select a collection address.");
     if (!selectedDate) return toast.error("Please select a date.");
     if (!selectedSlot) return toast.error("Please select a time slot.");
@@ -54,6 +51,7 @@ const CheckoutInner: React.FC = () => {
     }
 
     setIsSubmitting(true);
+
     try {
       const itemsPayload: any[] = [];
       cartItems.forEach((it: any) => {
@@ -66,8 +64,8 @@ const CheckoutInner: React.FC = () => {
               it.product_type === "Profile"
                 ? "lab_profile"
                 : it.product_type === "Package"
-                  ? "lab_package"
-                  : "lab_test",
+                ? "lab_package"
+                : "lab_test",
             product_id: it.product_id ?? it.product ?? it.id,
           });
         });
@@ -89,24 +87,22 @@ const CheckoutInner: React.FC = () => {
 
       const res: any = await customerApi.post("bookings/", payload);
       const created = res?.data ?? res;
+
       toast.success("Booking created successfully");
+
       try {
         await customerApi.post("carts/clear/");
-      } catch (e) {
+      } catch {
         try {
           const cr = await customerApi.get("carts/");
           const cart = cr?.data ?? cr;
           const obj = Array.isArray(cart) ? cart[0] : (cart?.results ? cart.results[0] : cart);
-          if (obj?.id) {
-            await customerApi.delete(`carts/${obj.id}/`);
-          }
-        } catch (ee) {
-          // ignore
-        }
+          if (obj?.id) await customerApi.delete(`carts/${obj.id}/`);
+        } catch {}
       }
+
       setBookingCreated(true);
-      setBookingId(created?.id ? String(created.id) : String(Date.now()).slice(-8));
-      // optimistic clear handled elsewhere (server)
+      setBookingId(created?.ref_id ? String(created.ref_id) : String(Date.now()).slice(-8));
       setTotalPrice(0);
     } catch (err: any) {
       console.error("createBooking error", err);
@@ -116,7 +112,7 @@ const CheckoutInner: React.FC = () => {
     }
   };
 
-  // derived totals preview
+  // computed totals
   const computedTotal = useMemo(() => {
     return cartItems.reduce((acc: number, it: any) => {
       const price = parseFloat(it.offer_price ?? it.base_price ?? it.price ?? 0);
@@ -125,7 +121,7 @@ const CheckoutInner: React.FC = () => {
     }, 0);
   }, [cartItems, assignedPatients]);
 
-  // if booking done show success
+  // success screen
   if (bookingCreated) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -135,12 +131,34 @@ const CheckoutInner: React.FC = () => {
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-12 h-12 text-green-600" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Booking Created Successfully!</h1>
-            <p className="text-gray-600 mb-8">Your booking ID is <span className="font-semibold text-blue-600">{bookingId}</span></p>
+
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              Booking Created Successfully!
+            </h1>
+
+            <p className="text-gray-600 mb-8">
+              Your booking ID is{" "}
+              <span className="font-semibold text-primary">{bookingId}</span>
+            </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button onClick={() => navigate("/")} className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700">Back to Home</button>
-              <button onClick={() => navigate("/products")} className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg">Book More Tests</button>
+              <button
+                onClick={() => navigate("/")}
+                className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary/90 transition"
+              >
+                Back to Home
+              </button>
+
+              <button
+                onClick={() => navigate("/products")}
+                className="
+                  border border-primary text-primary px-8 py-3 rounded-lg
+                  hover:bg-primary/5 hover:border-primary hover:text-primary
+                  transition
+                "
+              >
+                Book More Tests
+              </button>
             </div>
           </div>
         </main>
@@ -149,10 +167,12 @@ const CheckoutInner: React.FC = () => {
     );
   }
 
+  // main UI
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header  />
+      <Header />
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-1">Checkout</h1>
           <p className="text-gray-600">Complete your booking details</p>
@@ -164,48 +184,74 @@ const CheckoutInner: React.FC = () => {
           {activeStep === 2 && <PatientsStep openPatientModal={openPatientModal} />}
           {activeStep === 3 && <ReviewStep computedTotal={computedTotal} />}
 
+          {/* Navigation Buttons */}
           <div className="mt-4 flex justify-between">
             <div />
             <div className="flex gap-3">
+
               {activeStep > 0 && (
-                <button onClick={() => setActiveStep((s) => s - 1)} className="px-4 py-2 border rounded">Back</button>
+                <button
+                  onClick={() => setActiveStep((s) => s - 1)}
+                  className="
+                    px-4 py-2 border rounded
+                    hover:text-primary hover:border-primary hover:bg-primary/5
+                    transition
+                  "
+                >
+                  Back
+                </button>
               )}
+
               {activeStep < 3 ? (
                 <button
                   onClick={() => {
-                    // basic validation per step
-                    if (activeStep === 0) {
-                      // address
-                      if (!selectedAddress) {
-                        toast.error("Please select an address");
-                        return;
-                      }
-                      setActiveStep(1);
-                    } else if (activeStep === 1) {
-                      if (!selectedDate) { toast.error("Please select date"); return; }
-                      if (!selectedSlot) { toast.error("Please select slot"); return; }
-                      setActiveStep(2);
-                    } else if (activeStep === 2) {
-                      // ensure assignments exist
-                      const missing = cartItems.find((it: any) => !(assignedPatients[String(it.id)]?.length > 0));
-                      if (missing) { toast.error(`Assign patient(s) for ${missing.product_name || missing.name}`); return; }
-                      setActiveStep(3);
+                    if (activeStep === 0 && !selectedAddress)
+                      return toast.error("Please select an address");
+
+                    if (activeStep === 1) {
+                      if (!selectedDate) return toast.error("Please select date");
+                      if (!selectedSlot) return toast.error("Please select slot");
                     }
+
+                    if (activeStep === 2) {
+                      const missing = cartItems.find(
+                        (it: any) => !(assignedPatients[String(it.id)]?.length > 0)
+                      );
+                      if (missing)
+                        return toast.error(`Assign patient(s) for ${missing.product_name || missing.name}`);
+                    }
+
+                    setActiveStep((s) => s + 1);
                   }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                  className="
+                    px-4 py-2 bg-primary text-white rounded
+                    hover:bg-primary/90 transition
+                  "
                 >
                   Continue
                 </button>
               ) : (
-                <button onClick={createBooking} disabled={isSubmitting} className="px-4 py-2 bg-blue-600 text-white rounded">
+                <button
+                  onClick={createBooking}
+                  disabled={isSubmitting}
+                  className={`
+                    px-4 py-2 rounded text-white transition
+                    ${
+                      isSubmitting
+                        ? "bg-primary/50 cursor-not-allowed"
+                        : "bg-primary hover:bg-primary/90"
+                    }
+                  `}
+                >
                   {isSubmitting ? "Creating..." : "Confirm Booking"}
                 </button>
               )}
+
             </div>
           </div>
         </div>
 
-        {/* Patient modal used for both create and edit */}
+        {/* Patient Modal */}
         <PatientModal
           customerId={userId}
           open={patientModalOpen}
@@ -217,10 +263,6 @@ const CheckoutInner: React.FC = () => {
           forItem={patientModalForItem}
           editingPatient={patientEditData}
           onSaved={() => {
-            // refresh patients list in provider
-            // provider has refreshPatients; easiest to reload page's patients via custom event or direct call
-            // We'll call /client/patients/ to refresh context — simple approach:
-            // TODO: ideally provider exposes refreshPatients; for now reload the window of patient list update event
             window.dispatchEvent(new Event("patients-updated"));
             setPatientModalOpen(false);
           }}

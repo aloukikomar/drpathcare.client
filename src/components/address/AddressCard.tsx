@@ -31,7 +31,7 @@ export default function AddressCard({ address, selected, disabled, onClick, onEd
       role="button"
       onClick={() => !disabled && onClick?.(address)}
       className={`relative p-4 rounded-lg transition-shadow cursor-pointer
-        ${selected ? "border-2 border-blue-600 shadow-md" : "border border-gray-200"}
+        ${selected ? "border-2 border-primary shadow-md" : "border border-gray-200"}
         ${disabled ? "opacity-60 cursor-not-allowed" : "hover:shadow-lg"}
         bg-white`}
     >
