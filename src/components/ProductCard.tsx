@@ -2,11 +2,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  ShoppingCart,
   TestTubeDiagonal,
   Microscope,
   ClipboardList,
 } from "lucide-react";
+import CartButton from "./CartButton";
 
 interface Product {
   id: number;
@@ -23,7 +23,6 @@ interface Product {
 interface ProductCardProps {
   product: Product;
   productType: "LabTest" | "Profile" | "Package";
-  onAddToCart: (product: Product) => void;
 }
 
 // 🎨 Tag + Icon styles
@@ -56,7 +55,6 @@ const getTypeIcon = (type: string) => {
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
   productType,
-  onAddToCart,
 }) => {
   const { id, name, price, offer_price, category_name, reported_on, tests, profiles } =
     product;
@@ -140,20 +138,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             View Details
           </Link>
 
-          <button
-            onClick={() => onAddToCart(product)}
-            title="Add to Cart"
-            className="
-                      w-10 h-10 rounded-lg flex items-center justify-center
-                      bg-gray-100 text-gray-700
-                      transition-all
-                      hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white
-                      hover:shadow-md
-                      active:scale-95
-                    "
-          >
-            <ShoppingCart className="w-4 h-4" />
-          </button>
+          <CartButton compact productType={productType} productId={product.id} />
         </div>
       </div>
     </div>

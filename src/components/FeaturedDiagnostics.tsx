@@ -4,7 +4,7 @@ import {
   TestTubeDiagonal,
   ClipboardList,
 } from "lucide-react";
-import { globalApi, customerApi } from "../api/axios";
+import { globalApi } from "../api/axios";
 import { toast } from "react-toastify";
 import ProductCard from "./ProductCard";
 import LoginModal from "./LoginModal";
@@ -68,26 +68,6 @@ const FeaturedDiagnostics: React.FC = () => {
     fetchFeatured();
   }, [activeTab]);
 
-  // 🛒 Add to Cart
-  const handleAddToCart = async (product: Product, type: string) => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      toast.info("Please login to add items to your cart");
-      setShowLogin(true)
-      return;
-    }
-
-    try {
-      await customerApi.post("carts/", {
-        product_type: type,
-        product_id: product.id,
-      });
-      toast.success(`${product.name} added to cart!`);
-    } catch (error) {
-      console.error("Add to cart failed:", error);
-      toast.error("Unable to add to cart");
-    }
-  };
 
   const currentTab = tabs.find((t) => t.value === activeTab);
   const currentType = (currentTab?.type || "LabTest") as "LabTest" | "Profile" | "Package";
@@ -139,7 +119,6 @@ const FeaturedDiagnostics: React.FC = () => {
                 key={p.id}
                 product={p}
                 productType={currentType}
-                onAddToCart={() => handleAddToCart(p, currentType)}
               />
             ))}
           </div>

@@ -9,7 +9,7 @@ import { debounce } from "lodash";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { globalApi, customerApi } from "../api/axios";
+import { globalApi } from "../api/axios";
 import { toast } from "react-toastify";
 import LoginModal from "../components/LoginModal";
 //import { useCart } from "../context/CartContext";
@@ -155,33 +155,6 @@ const ProductCatalog: React.FC = () => {
     fetchProducts();
   }, [productType, category, searchTerm, sortBy]);
 
-  // 🛒 Add to Cart (FIXED)
-  const handleAddToCart = async (product: Product) => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      toast.info("Please login to add items to your cart.");
-      setShowLogin(true)
-      return;
-    }
-
-    if (!product) return;
-    try {
-      await customerApi.post("carts/", {
-        product_type:
-          productType === "lab_test"
-            ? "LabTest"
-            : productType === "lab_profile"
-              ? "Profile"
-              : "Package",
-        product_id: product.id,
-      });
-
-      toast.success(`${product.name} added to cart!`);
-    } catch (error) {
-      console.error("Add to cart error:", error);
-      toast.error("Unable to add item to cart");
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -308,7 +281,6 @@ const ProductCatalog: React.FC = () => {
                     key={p.id}
                     product={p}
                     productType={currentType}
-                    onAddToCart={() => handleAddToCart(p)}
                   />
                 );
               })}

@@ -1,36 +1,25 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   TestTubeDiagonal,
   Microscope,
   ClipboardList,
   ArrowLeft,
-  ShoppingCart,
+  Home,
+  Clock,
 } from "lucide-react";
-import { globalApi, customerApi } from "../api/axios";
+import { globalApi } from "../api/axios";
 import { toast } from "react-toastify";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
+import CartButton from "../components/CartButton";
 
-interface Product {
-  id: number;
-  name: string;
-  category_name?: string;
-  description?: string;
-  reported_on?: string;
-  method?: string;
-  sample_type?: string;
-  price: string;
-  offer_price?: string;
-  is_featured?: boolean;
-  tests_included?: { id: number; name: string }[];
-}
-
+// Tag Color
 const getTagColor = (type: string) => {
   switch (type) {
     case "labtest":
-      return "bg-blue-50 text-blue-700 border border-blue-200";
+      return "bg-primary/10 text-primary border border-primary/30";
     case "profile":
       return "bg-green-50 text-green-700 border border-green-200";
     case "package":
@@ -43,78 +32,45 @@ const getTagColor = (type: string) => {
 const getTypeIcon = (type: string) => {
   switch (type) {
     case "labtest":
-      return <TestTubeDiagonal className="w-10 h-10 text-blue-600" />;
+      return <TestTubeDiagonal className="w-12 h-12 text-primary" />;
     case "profile":
-      return <Microscope className="w-10 h-10 text-green-600" />;
+      return <Microscope className="w-12 h-12 text-green-600" />;
     case "package":
-      return <ClipboardList className="w-10 h-10 text-orange-600" />;
+      return <ClipboardList className="w-12 h-12 text-orange-600" />;
     default:
-      return <TestTubeDiagonal className="w-10 h-10 text-gray-400" />;
+      return <TestTubeDiagonal className="w-12 h-12 text-gray-400" />;
   }
 };
 
-const ProductDetails: React.FC = () => {
-  const { product_type, id } = useParams<{ product_type: string; id: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
+const ProductDetails = () => {
+  const { product_type, id } = useParams();
+  const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
-  const currentType = product_type as "labtest" | "profile" | "package";
+  const type = product_type as "labtest" | "profile" | "package";
 
-  // ✅ Correct endpoint mapping
-  const endpointMap: Record<"labtest" | "profile" | "package", string> = {
+  const endpointMap = {
     labtest: `client/lab-tests/${id}/`,
     profile: `client/lab-profiles/${id}/`,
     package: `client/lab-packages/${id}/`,
   };
 
-  const fetchProduct = async () => {
-    setLoading(true);
-    try {
-      const res = await globalApi.get<Product>(endpointMap[currentType]);
-      setProduct(res);
-    } catch (error) {
-      console.error("Failed to fetch product:", error);
-      toast.error("Unable to load product details");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch product
   useEffect(() => {
-    if (product_type && id) fetchProduct();
-  }, [product_type, id]);
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const res = await globalApi.get(endpointMap[type]);
+        setProduct(res);
+      } catch (err) {
+        toast.error("Unable to load product.");
+      }
+      setLoading(false);
+    };
 
-  // ✅ Add to cart using API directly
-  const handleAddToCart = async () => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      toast.info("Please login to add items to your cart.");
-      setShowLogin(true)
-      return;
-    }
-
-    if (!product) return;
-
-    try {
-      await customerApi.post("carts/", {
-        product_type:
-          currentType === "labtest"
-            ? "LabTest"
-            : currentType === "profile"
-              ? "Profile"
-              : "Package",
-        product_id: product.id,
-      });
-
-      toast.success(`${product.name} added to cart!`);
-    } catch (error: any) {
-      console.error("Add to cart failed:", error);
-      const msg =
-        error.response?.data?.error || "Unable to add item to cart right now.";
-      toast.error(msg);
-    }
-  };
+    fetchProduct();
+  }, [id, type]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -123,158 +79,173 @@ const ProductDetails: React.FC = () => {
       <LoginModal
         isOpen={showLogin}
         onClose={() => setShowLogin(false)}
-        onLoginSuccess={(user) => {
-          console.log("Logged in:", user);
-          window.location.reload()
-        }}
+        onLoginSuccess={() => window.location.reload()}
       />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-6">
+        {/* BACK */}
         <button
           onClick={() => window.history.back()}
-          className="flex items-center text-sm text-gray-600 hover:text-primary mb-6"
+          className="flex items-center gap-1 text-sm text-gray-600 hover:text-primary mb-5"
         >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Back to Catalog
+          <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
         {loading ? (
-          <div className="text-center text-gray-500 py-16">Loading...</div>
+          <div className="py-20 text-center text-gray-500">Loading...</div>
         ) : !product ? (
-          <div className="text-center text-gray-600 py-16">
-            Product not found.
-          </div>
+          <div className="py-20 text-center text-gray-500">Not found</div>
         ) : (
           <>
-            {/* Product Overview */}
-            <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6 md:p-10 mb-10 grid md:grid-cols-2 gap-8">
-              {/* Left Info */}
-              <div className="flex flex-col space-y-6">
-                <div className="flex items-center space-x-3">
-                  <div
-                    className={`w-14 h-14 rounded-lg flex items-center justify-center ${getTagColor(
-                      currentType
-                    )}`}
-                  >
-                    {getTypeIcon(currentType)}
+            {/* =========================== */}
+            {/* HEADER SECTION (New Clean Compact Design) */}
+            {/* =========================== */}
+            <div className="bg-white rounded-xl border shadow-sm p-6 md:p-6 mb-6">
+
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+                {/* LEFT SIDE — ICON + TITLE */}
+                <div className="flex items-start gap-4">
+
+                  {/* ICON */}
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                    {getTypeIcon(type)}
                   </div>
+
+                  {/* TITLE + TAGS */}
                   <div>
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                    <h1 className="text-lg md:text-lg font-bold text-gray-900 leading-snug">
                       {product.name}
                     </h1>
-                    <span
-                      className={`text-xs font-semibold px-3 py-1 rounded-full ${getTagColor(
-                        currentType
-                      )}`}
-                    >
-                      {currentType}
-                    </span>
+
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <span
+                        className={`text-xs px-3 py-1 rounded-full ${getTagColor(type)}`}
+                      >
+                        {type}
+                      </span>
+
+                      {product.category_name && (
+                        <span className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full border border-gray-200">
+                          {product.category_name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* RIGHT SIDE — PRICE + ADD BUTTON */}
+                <div
+                  className="
+    w-full md:w-auto 
+    bg-gray-50 border rounded-xl p-4 
+    flex flex-col items-center md:items-end
+    text-center md:text-right
+  "
+                >
+                  {/* PRICE BLOCK */}
+                  <div className="flex flex-col items-center md:items-end">
+
+                    <div className="flex flex-wrap justify-center md:justify-end items-baseline gap-2">
+                      <span className="text-lg font-bold text-gray-900">
+                        ₹{product.offer_price || product.price}
+                      </span>
+
+                      {product.offer_price && (
+                        <>
+                          <span className="text-gray-500 line-through text-sm">
+                            ₹{product.price}
+                          </span>
+
+                          <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
+                            Save ₹
+                            {Math.round(
+                              parseFloat(product.price) - parseFloat(product.offer_price)
+                            )}
+                          </span>
+                        </>
+                      )}
+                    </div>
+
+                    {/* BUTTON */}
+                    <div className="mt-3 w-full">
+                      <CartButton productType={
+                        (type === "labtest")
+                          ? "LabTest"
+                          : type === "profile"
+                            ? "Profile"
+                            : "Package"
+                            } productId={product.id} />
+                    </div>
+
+
                   </div>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed">
-                  {product.description || "Detailed information coming soon."}
-                </p>
-
-                <div className="text-sm text-gray-600 space-y-1">
-                  {product.category_name && (
-                    <p>
-                      <strong>Category:</strong> {product.category_name}
-                    </p>
-                  )}
-                  {product.reported_on && (
-                    <p>
-                      <strong>Reported On:</strong> {product.reported_on}
-                    </p>
-                  )}
-                  {product.method && (
-                    <p>
-                      <strong>Method:</strong> {product.method}
-                    </p>
-                  )}
-                  {product.sample_type && (
-                    <p>
-                      <strong>Sample Type:</strong> {product.sample_type}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Pricing / Action */}
-              <div className="flex flex-col justify-center bg-gray-50 border border-gray-200 rounded-lg p-6 space-y-4">
-                <div className="flex items-baseline space-x-3">
-                  <span className="text-3xl font-bold text-gray-900">
-                    ₹{product.offer_price || product.price}
-                  </span>
-                  {product.offer_price && (
-                    <>
-                      <span className="text-gray-500 line-through text-lg">
-                        ₹{product.price}
-                      </span>
-                      <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
-                        Save ₹
-                        {Math.round(
-                          parseFloat(product.price) -
-                          parseFloat(product.offer_price)
-                        )}
-                      </span>
-                    </>
-                  )}
-                </div>
-
-                <button
-                  onClick={handleAddToCart}
-                  className="
-                            flex items-center justify-center py-3 rounded-lg font-medium text-white
-                            bg-primary
-                            transition-all
-                            hover:bg-gradient-to-r hover:from-primary hover:to-secondary
-                            hover:shadow-md
-                            active:scale-[.98]
-                          "
-                >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </button>
-
               </div>
             </div>
 
-            {/* Optional Sections */}
-            <div className="space-y-8">
-              {product.tests_included && product.tests_included.length > 0 && (
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                    Tests Included
-                  </h2>
-                  <ul className="list-disc pl-5 text-gray-700 space-y-1">
-                    {product.tests_included.map((t) => (
-                      <li key={t.id}>{t.name}</li>
-                    ))}
-                  </ul>
+
+            {/* =========================== */}
+            {/* KNOW MORE SECTION */}
+            {/* =========================== */}
+            <section>
+              <div className="rounded-3xl p-6 md:p-6 bg-gradient-to-br from-primary/10 to-secondary/10 shadow-sm">
+
+                <h2 className="text-2xl font-bold text-gray-900 mb-5">
+                  Know more about this test
+                </h2>
+
+                {/* Description */}
+                {product.description && (
+                  <div className="bg-white rounded-xl p-4 md:p-5 shadow-sm mb-6 text-gray-700">
+                    {product.description}
+                  </div>
+                )}
+
+                {/* INFO CARDS */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                  <InfoCard
+                    title="Sample Type"
+                    value={product.sample_type || "Not specified"}
+                    icon={<TestTubeDiagonal className="w-6 h-6 text-primary" />}
+                  />
+
+                  <InfoCard
+                    title="Preparation"
+                    value={product.special_instruction || "No special preparation required."}
+                    icon={<Clock className="w-6 h-6 text-primary" />}
+                  />
+
+                  <InfoCard
+                    title="Method"
+                    value={product.method || "—"}
+                    icon={<Microscope className="w-6 h-6 text-primary" />}
+                  />
+
+                  <InfoCard
+                    title="Reported On"
+                    value={product.reported_on || "—"}
+                    icon={<Clock className="w-6 h-6 text-primary" />}
+                  />
+
+                  <InfoCard
+                    title="Temperature"
+                    value={product.temperature || "—"}
+                    icon={<Home className="w-6 h-6 text-primary" />}
+                  />
+
+                  <InfoCard
+                    title="Who collects sample?"
+                    value="Experienced phlebotomist at your home"
+                    icon={<Home className="w-6 h-6 text-primary" />}
+                  />
+
                 </div>
-              )}
-
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  Preparation Instructions
-                </h2>
-                <p className="text-gray-700">
-                  Please follow the specific preparation guidelines provided by
-                  your doctor or our diagnostic team before sample collection.
-                </p>
               </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                  Similar Tests
-                </h2>
-                <p className="text-gray-600">
-                  Coming soon — you’ll see related or recommended diagnostics
-                  here based on your selection.
-                </p>
-              </div>
-            </div>
+            </section>
           </>
         )}
       </main>
@@ -283,5 +254,19 @@ const ProductDetails: React.FC = () => {
     </div>
   );
 };
+
+const InfoCard = ({ title, value, icon }: any) => (
+  <div className="bg-white p-5 rounded-xl shadow-sm border hover:shadow-md transition">
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm text-gray-500">{title}</p>
+        <p className="font-semibold text-gray-900">{value}</p>
+      </div>
+      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+        {icon}
+      </div>
+    </div>
+  </div>
+);
 
 export default ProductDetails;

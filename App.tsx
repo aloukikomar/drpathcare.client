@@ -14,10 +14,12 @@ import NotFound from "./src/pages/NotFound";
 import Account from "./src/pages/AccountPage";
 import AboutPage from "./src/pages/AboutPage";
 import BookingViewPage from "./src/pages/BookingViewPage"; // ✅ NEW IMPORT
+import { CartProvider } from "./src/context/CartContext";
 
 const App: React.FC = () => {
   return (
     <Theme appearance="inherit" radius="large" scaling="100%">
+      <CartProvider>
       <Router>
         <main className="min-h-screen">
           <Routes>
@@ -47,6 +49,7 @@ const App: React.FC = () => {
           />
         </main>
       </Router>
+      </CartProvider>
     </Theme>
   );
 };

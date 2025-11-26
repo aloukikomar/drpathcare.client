@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useRef } from "react";
-import { Search, ShoppingCart } from "lucide-react";
+import { Search } from "lucide-react";
 import { debounce } from "lodash";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { globalApi, customerApi } from "../api/axios";
-import { toast } from "react-toastify";
+import { globalApi } from "../api/axios";
 import LoginModal from "./LoginModal";
+import CartButton from "./CartButton";
 
 interface SearchItem {
   id: number;
@@ -98,30 +98,6 @@ const SearchBar: React.FC<Props> = ({
     navigate(`/product-details/${item.type.toLowerCase()}/${item.id}`);
   };
 
-  const handleAddToCart = async (e: React.MouseEvent, item: SearchItem) => {
-    e.stopPropagation();
-
-    const user = localStorage.getItem("user");
-    if (!user) {
-      toast.info("Please login to add items to your cart", {
-  position: "top-center",
-});
-      setShowLogin(true)
-      return;
-    }
-
-    try {
-      await customerApi.post("carts/", {
-        product_type: item.type,
-        product_id: item.id,
-      });
-      toast.success("Added to cart!");
-      window.dispatchEvent(new Event("cart-updated"));
-    } catch (error) {
-      console.error("Add to cart error:", error);
-      toast.error("Unable to add item to cart");
-    }
-  };
 
   return (
     <div className="relative w-full">
@@ -201,21 +177,7 @@ const SearchBar: React.FC<Props> = ({
                     </span>
                   </div>
 
-                  <button
-                    onClick={(e) => handleAddToCart(e, item)}
-                    className="
-                      w-10 h-10 rounded-lg flex items-center justify-center
-                      bg-gray-100 text-gray-700
-                      transition-all
-                      hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white
-                      hover:shadow-md
-                      active:scale-95
-                    "
-                    title="Add to Cart"
-                    aria-label={`Add ${item.name} to cart`}
-                  >
-                    <ShoppingCart className="w-4 h-4" />
-                  </button>
+                  <CartButton compact productType={item.type} productId={item.id} />
                 </div>
               ))
             )}
