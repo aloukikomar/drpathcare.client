@@ -5,6 +5,7 @@ import HeroSection from '../components/HeroSection';
 import FeaturedDiagnostics from '../components/FeaturedDiagnostics';
 import TestCategories from '../components/TestCategories';
 import WhyChooseUs from '../components/WhyChooseUs';
+import PartnersCarousel from '../components/PartnersCarousel';
 
 const Home: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const Home: React.FC = () => {
         <HeroSection />
         <FeaturedDiagnostics />
         <TestCategories />
+        <PartnersCarousel />
         <WhyChooseUs />
       </main>
       <Footer />

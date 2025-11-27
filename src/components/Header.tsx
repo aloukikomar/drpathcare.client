@@ -57,6 +57,16 @@ const Header: React.FC<HeaderProps> = ({ showSearch = false }) => {
     fetchCartCount();
   }, [location.pathname]);
 
+  // 🔔 Listen for login events (add/remove)
+    useEffect(() => {
+      const handleCartUpdate = () => setShowLogin(true);
+  
+      window.addEventListener("login-req", handleCartUpdate);
+      return () => {
+        window.removeEventListener("login-req", handleCartUpdate);
+      };
+    }, []);
+
   // 🔔 Listen for custom cart update events (add/remove)
   useEffect(() => {
     const handleCartUpdate = () => fetchCartCount();
@@ -74,18 +84,18 @@ const Header: React.FC<HeaderProps> = ({ showSearch = false }) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            {/* <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">DP</span>
-            </div>
-            <span className="font-inter font-bold text-xl text-gray-900">
-              Dr Pathcare
-            </span> */}
             <img
               src="/icons/logo1.png"
-              // alt="Book via phone"
-              className="mt-7 w-36 h-24 object-contain"
+              className="
+                          mt-0 
+                          w-24 h-18            /* Mobile size */
+                          md:mt-7
+                          md:w-36 md:h-24      /* Desktop size */
+                          object-contain
+                        "
             />
           </Link>
+
 
           {/* 🔹 Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">

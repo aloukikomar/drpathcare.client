@@ -170,31 +170,45 @@ const Cart: React.FC = () => {
   // 🛒 Empty cart state
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header showSearch />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ShoppingBag className="w-12 h-12 text-gray-400" />
+
+        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+          <div className="text-center flex flex-col items-center">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+              <ShoppingBag className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
               Your cart is empty
             </h1>
-            <p className="text-gray-600 mb-8">
+
+            <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base px-4 sm:px-0">
               Add some lab tests to get started with your booking.
             </p>
+
             <Link
               to="/products"
-              className="inline-flex items-center bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition-colors font-medium"
+              className="
+              inline-flex items-center justify-center
+              bg-primary text-white
+              px-6 py-2.5 sm:px-8 sm:py-3
+              rounded-lg
+              text-sm sm:text-base
+              hover:bg-secondary
+              transition-colors font-medium
+            "
             >
               Browse Tests
             </Link>
           </div>
         </main>
+
         <Footer />
       </div>
     );
   }
+
 
   // 🧾 Main cart layout
   return (
@@ -216,36 +230,49 @@ const Cart: React.FC = () => {
               return (
                 <div
                   key={item.id}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 flex items-start justify-between hover:shadow-md transition"
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 
+                   flex flex-col sm:flex-row sm:items-start sm:justify-between 
+                   gap-4 hover:shadow-md transition"
                 >
-                  <div className="flex items-start space-x-4 flex-1" onClick={() => handleRowClick(item)}>
+                  {/* LEFT SECTION */}
+                  <div
+                    className="flex items-start gap-3 flex-1 cursor-pointer"
+                    onClick={() => handleRowClick(item)}
+                  >
                     <div
-                      className={`w-16 h-16 rounded-lg flex items-center justify-center ${color}`}
+                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center ${color}`}
                     >
                       {icon}
                     </div>
+
                     <div className="flex-1">
-                      <h3 className="font-semibold text-lg text-gray-900">
+                      <h3 className="font-semibold text-base sm:text-lg text-gray-900 leading-snug">
                         {item.name}
                       </h3>
-                      <p className="text-sm text-gray-500">
+
+                      <p className="text-xs sm:text-sm text-gray-500 capitalize mt-1">
                         {item.product_type}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-end">
-                    <p className="text-lg font-semibold text-gray-900">
-                      ₹{item.offer_price || item.price}
-                    </p>
-                    {item.offer_price && (
-                      <p className="text-xs text-gray-500 line-through">
-                        ₹{item.price}
+                  {/* RIGHT SECTION */}
+                  <div className="flex flex-row sm:flex-col items-end sm:items-end justify-between sm:justify-start gap-2">
+                    <div className="text-right sm:text-right">
+                      <p className="text-base sm:text-lg font-semibold text-gray-900">
+                        ₹{item.offer_price || item.price}
                       </p>
-                    )}
+
+                      {item.offer_price && (
+                        <p className="text-xs text-gray-500 line-through">
+                          ₹{item.price}
+                        </p>
+                      )}
+                    </div>
+
                     <button
                       onClick={() => handleRemoveItem(item.id)}
-                      className="mt-3 text-red-600 hover:text-red-800 flex items-center text-sm font-medium"
+                      className="text-red-600 hover:text-red-800 flex items-center text-xs sm:text-sm font-medium"
                     >
                       <Trash2 className="w-4 h-4 mr-1" /> Remove
                     </button>
@@ -254,6 +281,7 @@ const Cart: React.FC = () => {
               );
             })}
           </div>
+
 
           {/* Order Summary */}
           <div className="lg:col-span-1">

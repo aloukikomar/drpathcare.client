@@ -30,6 +30,7 @@ const CartButton = ({
 
     if (!user) {
       toast.info("Please login to continue");
+      window.dispatchEvent(new Event("login-req"));
       onRequireLogin();
       return;
     }

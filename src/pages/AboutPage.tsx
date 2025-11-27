@@ -8,6 +8,7 @@ import Certifications from "../components/about/Certifications";
 import VideoSection from "../components/about/VideoSection";
 import GallerySection from "../components/about/GallerySection";
 import WhyChooseUs from "../components/about/WhyChooseUs";
+import PartnersCarousel from "../components/PartnersCarousel";
 
 const AboutPage = () => (
   <div className="bg-white">
@@ -16,6 +17,7 @@ const AboutPage = () => (
     <AboutHero />
     <AboutContent />
     <MissionVisionValues />
+    <PartnersCarousel />
     <Certifications />
     <VideoSection />
     <GallerySection />
