@@ -11,8 +11,12 @@ import Checkout from "./src/pages/Checkout";
 import NotFound from "./src/pages/NotFound";
 import Account from "./src/pages/AccountPage";
 import AboutPage from "./src/pages/AboutPage";
-import BookingViewPage from "./src/pages/BookingViewPage"; 
+import BookingViewPage from "./src/pages/BookingViewPage";
 import Terms from "./src/components/policies/Terms";
+import Cancellation from "./src/components/policies/Cancellation";
+import Privacy from "./src/components/policies/Privacy";
+import Refund from "./src/components/policies/Refund";
+import HomeCollection from "./src/components/policies/HomeCollection";
 
 import ScrollToTop from "./src/utils/ScrollToTop";     // ✅ Added
 import { CartProvider } from "./src/context/CartContext";
@@ -43,6 +47,10 @@ const App: React.FC = () => {
 
                 {/* Policies */}
                 <Route path="/policy/terms" element={<Terms />} />
+                <Route path="/policy/cancellation" element={<Cancellation />} />
+                <Route path="/policy/privacy" element={<Privacy />} />
+                <Route path="/policy/refund" element={<Refund />} />
+                <Route path="/policy/homecollection" element={<HomeCollection />} />
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
