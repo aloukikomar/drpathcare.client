@@ -11,7 +11,7 @@ import PatientsStep from "../components/checkout/PatientsStep";
 import ReviewStep from "../components/checkout/ReviewStep";
 import PatientModal from "../components/PatientModal";
 import { customerApi } from "../api/axios";
-import { toast } from "react-toastify";
+import { useToast } from "../context/ToastManager";
 
 const CheckoutInner: React.FC = () => {
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ const CheckoutInner: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingCreated, setBookingCreated] = useState(false);
   const [bookingId, setBookingId] = useState<string>("");
+  const { showToast } = useToast();
 
   // open patient modal
   const openPatientModal = (item: any, editPatient?: any) => {
@@ -42,12 +43,12 @@ const CheckoutInner: React.FC = () => {
 
   // create booking
   const createBooking = async () => {
-    if (!selectedAddress) return toast.error("Please select a collection address.");
-    if (!selectedDate) return toast.error("Please select a date.");
-    if (!selectedSlot) return toast.error("Please select a time slot.");
+    if (!selectedAddress) return showToast("Please select a collection address.", "error");
+    if (!selectedDate) return showToast("Please select a date.", "error");
+    if (!selectedSlot) return showToast("Please select a time slot.", "error");
     for (const it of cartItems) {
       const arr = assignedPatients[String(it.id)] ?? [];
-      if (arr.length === 0) return toast.error(`Assign patient(s) for ${it.product_name || it.name}`);
+      if (arr.length === 0) return showToast(`Assign patient(s) for ${it.product_name || it.name}`, "error");
     }
 
     setIsSubmitting(true);
@@ -88,7 +89,7 @@ const CheckoutInner: React.FC = () => {
       const res: any = await customerApi.post("bookings/", payload);
       const created = res?.data ?? res;
 
-      toast.success("Booking created successfully");
+      showToast("Booking created successfully", "success")
 
       try {
         await customerApi.post("carts/clear/");
@@ -106,7 +107,7 @@ const CheckoutInner: React.FC = () => {
       setTotalPrice(0);
     } catch (err: any) {
       console.error("createBooking error", err);
-      toast.error(err?.response?.data?.detail || "Failed to create booking");
+      showToast(err?.response?.data?.detail || "Failed to create booking", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -206,11 +207,11 @@ const CheckoutInner: React.FC = () => {
                 <button
                   onClick={() => {
                     if (activeStep === 0 && !selectedAddress)
-                      return toast.error("Please select an address");
+                      return showToast("Please select an address", "error");
 
                     if (activeStep === 1) {
-                      if (!selectedDate) return toast.error("Please select date");
-                      if (!selectedSlot) return toast.error("Please select slot");
+                      if (!selectedDate) return showToast("Please select date", "error");
+                      if (!selectedSlot) return showToast("Please select slot", "error");
                     }
 
                     if (activeStep === 2) {
@@ -218,7 +219,7 @@ const CheckoutInner: React.FC = () => {
                         (it: any) => !(assignedPatients[String(it.id)]?.length > 0)
                       );
                       if (missing)
-                        return toast.error(`Assign patient(s) for ${missing.product_name || missing.name}`);
+                        return showToast(`Assign patient(s) for ${missing.product_name || missing.name}`, "error");
                     }
 
                     setActiveStep((s) => s + 1);

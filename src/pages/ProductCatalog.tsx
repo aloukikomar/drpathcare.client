@@ -10,9 +10,8 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import { globalApi } from "../api/axios";
-import { toast } from "react-toastify";
 import LoginModal from "../components/LoginModal";
-//import { useCart } from "../context/CartContext";
+import { useToast } from "../context/ToastManager";
 
 interface Product {
   id: number;
@@ -63,6 +62,7 @@ const ProductCatalog: React.FC = () => {
   const [prevPage, setPrevPage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const { showToast } = useToast();
 
   const fetchCategories = async () => {
     try {
@@ -117,7 +117,7 @@ const ProductCatalog: React.FC = () => {
       setPrevPage(data.previous);
     } catch (error) {
       console.error("Error fetching products:", error);
-      toast.error("Failed to load products");
+      showToast("Failed to load products", "error");
     } finally {
       setLoading(false);
     }

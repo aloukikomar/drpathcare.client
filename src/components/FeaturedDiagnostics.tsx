@@ -5,9 +5,9 @@ import {
   ClipboardList,
 } from "lucide-react";
 import { globalApi } from "../api/axios";
-import { toast } from "react-toastify";
 import ProductCard from "./ProductCard";
 import LoginModal from "./LoginModal";
+import { useToast } from "../context/ToastManager";
 
 interface Product {
   id: number;
@@ -50,6 +50,7 @@ const FeaturedDiagnostics: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const { showToast } = useToast();
 
   // 🧭 Fetch Featured Products
   useEffect(() => {
@@ -60,7 +61,7 @@ const FeaturedDiagnostics: React.FC = () => {
         setProducts(res.results || res);
       } catch (err) {
         console.error("Failed to load featured products", err);
-        toast.error("Failed to load featured products");
+        showToast("Failed to load featured products", "error");
       } finally {
         setLoading(false);
       }

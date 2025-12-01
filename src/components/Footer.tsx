@@ -122,14 +122,14 @@ const Footer: React.FC = () => {
 
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-primary" />
-                <span className="text-gray-300 text-sm">support@drpathcare.com</span>
+                <span className="text-gray-300 text-sm">info@drpathcare.com</span>
               </div>
 
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-primary mt-0.5" />
                 <span className="text-gray-300 text-sm">
-                  123 Healthcare Ave<br />
-                  Medical District, NY 10001
+                  E-113, Second Floor <br />
+                  Sector-6 Noida-201301
                 </span>
               </div>
             </div>
@@ -221,7 +221,7 @@ const Footer: React.FC = () => {
             <Link to="/privacy" className="text-gray-400 hover:text-white transition">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-gray-400 hover:text-white transition">
+            <Link to="/policy/terms" className="text-gray-400 hover:text-white transition">
               Terms of Service
             </Link>
             <span className="text-gray-400">

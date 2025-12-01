@@ -5,7 +5,7 @@ import AccountTable from "./AccountTable";
 import AddressItem from "../AddressItem";
 import AddressModal from "../address/AddressModal";
 import { customerApi } from "../../api/axios";
-import { toast } from "react-toastify";
+import { useToast } from "../../context/ToastManager";
 
 const AccountAddresses = () => {
   const {
@@ -21,6 +21,7 @@ const AccountAddresses = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
+  const { showToast } = useToast();
 
   // --------------------------
   // Handlers
@@ -30,20 +31,20 @@ const AccountAddresses = () => {
     if (!window.confirm("Delete this address?")) return;
     try {
       await customerApi.delete(`client/addresses/${id}/`);
-      toast.success("Address deleted");
+      showToast("Address deleted", "success");
       refresh();
     } catch {
-      toast.error("Failed to delete");
+      showToast("Failed to delete", "error");
     }
   };
 
   const handleSetDefault = async (id: number) => {
     try {
       await customerApi.patch(`client/addresses/${id}/`, { is_default: true });
-      toast.success("Set as default");
+      showToast("Set as default", "success");
       refresh();
     } catch {
-      toast.error("Failed to update");
+      showToast("Failed to update", "error");
     }
   };
 

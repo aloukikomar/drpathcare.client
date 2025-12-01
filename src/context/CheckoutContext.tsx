@@ -1,8 +1,8 @@
 // src/context/CheckoutContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { customerApi } from "../api/axios";
-import { toast } from "react-toastify";
 import type { Address } from "../components/address/AddressCard";
+import { useToast } from "../context/ToastManager";
 
 type AnyObj = Record<string, any>;
 
@@ -51,6 +51,7 @@ export const CheckoutProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     const [assignedPatients, setAssignedPatients] = useState<PatientsMap>({});
     const [patientsList, setPatientsList] = useState<AnyObj[]>([]);
+    const { showToast } = useToast();
 
     const localUser =
         typeof window !== "undefined"
@@ -95,7 +96,7 @@ export const CheckoutProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             setTotalPrice(tp);
         } catch (err) {
             console.error("fetchCart error", err);
-            toast.error("Unable to load cart");
+            showToast("Unable to load cart", "error")
         }
     };
 

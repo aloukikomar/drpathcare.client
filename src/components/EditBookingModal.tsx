@@ -4,7 +4,7 @@ import { useState } from "react";
 import { X, Calendar, Clock, Trash2, RefreshCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { customerApi } from "../api/axios";
-import { toast } from "react-toastify";
+import { useToast } from "../context/ToastManager";
 
 const TIME_SLOTS = [
   "6:00 AM - 8:00 AM",
@@ -26,6 +26,7 @@ const EditBookingModal = ({
   const [newSlot, setNewSlot] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   if (!open) return null;
 
@@ -47,12 +48,12 @@ const EditBookingModal = ({
         remarks: notes,
       });
 
-      toast.success("Booking rescheduled!");
+      showToast("Booking rescheduled!", "success");
       onClose();
       onUpdated?.();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to reschedule booking");
+      showToast("Failed to reschedule booking", "error");
     } finally {
       setLoading(false);
     }
@@ -70,13 +71,12 @@ const EditBookingModal = ({
         action: "cancel",
         remarks: notes,
       });
-
-      toast.success("Booking cancelled");
+      showToast("Booking cancelled", "error");
       onClose();
       onUpdated?.();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to cancel booking");
+      showToast("Failed to cancel booking", "error");
     } finally {
       setLoading(false);
     }

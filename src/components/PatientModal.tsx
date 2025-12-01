@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { customerApi } from "../api/axios";
-import { toast } from "react-toastify";
+import { useToast } from "../context/ToastManager";
 
 export default function PatientModal({
     customerId,
@@ -27,6 +27,7 @@ export default function PatientModal({
         age: "",
     });
     const [loading, setLoading] = useState(false);
+    const { showToast } = useToast();
 
     useEffect(() => {
         if (editingPatient) {
@@ -53,7 +54,7 @@ export default function PatientModal({
     if (!open) return null;
 
     const handleSave = async () => {
-        if (!form.first_name || !form.age) return toast.error("Name and age are required");
+        if (!form.first_name || !form.age) return showToast("Name and age are required", "error");
         setLoading(true);
         try {
             if (editingPatient && editingPatient.id) {
@@ -68,7 +69,7 @@ export default function PatientModal({
                     age: form.age ? Number(form.age) : null,
                 };
                 await customerApi.patch(`client/patients/${editingPatient.id}/`, payload);
-                toast.success("Patient updated");
+                showToast("Patient updated", "success")
             } else {
                 // create
                 
@@ -82,7 +83,7 @@ export default function PatientModal({
                     age: form.age ? Number(form.age) : null,
                 };
                 await customerApi.post("client/patients/", payload);
-                toast.success("Patient created");
+                showToast("Patient created", "success")
             }
 
             // notify parent to refresh patient list
@@ -91,7 +92,7 @@ export default function PatientModal({
             onClose();
         } catch (err: any) {
             console.error("patient save", err);
-            toast.error(err?.response?.data?.detail || "Failed to save patient");
+            showToast(err?.response?.data?.detail || "Failed to save patient", "error")
         } finally {
             setLoading(false);
         }

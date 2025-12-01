@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import StepHeader from "./StepHeader";
 import { useCheckout } from "../../context/CheckoutContext";
 import AssignedPatientChip from "./AssignedPatientChip";
-import { toast } from "react-toastify";
 import { Search, Plus } from "lucide-react";
+import { useToast } from "../../context/ToastManager";
 
 const PatientsStep: React.FC<{
     openPatientModal: (item: any, editPatient?: any) => void;
@@ -19,6 +19,7 @@ const PatientsStep: React.FC<{
     const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     const [searchText, setSearchText] = useState("");
+    const { showToast } = useToast();
 
     /* -------------------------------
         Refresh after create/edit
@@ -61,7 +62,7 @@ const PatientsStep: React.FC<{
         setAssignedPatients((prev) => {
             const arr = prev[itemId] ? [...prev[itemId]] : [];
             if (arr.some((x) => x.id === patient.id)) {
-                toast.info("Patient already assigned");
+                showToast("Patient already assigned", "info");
                 return prev;
             }
             return { ...prev, [itemId]: [...arr, patient] };
@@ -92,7 +93,7 @@ const PatientsStep: React.FC<{
                 canChange={Object.values(assignedPatients).flat().length > 0}
                 onChange={() => {
                     setAssignedPatients({});
-                    toast.info("All patient assignments cleared");
+                    showToast("All patient assignments cleared", "info");
                 }}
             />
 

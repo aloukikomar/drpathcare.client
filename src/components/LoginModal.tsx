@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { globalApi } from "../api/axios";
+import { useToast } from "../context/ToastManager";
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -21,6 +21,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
     const [email, setEmail] = useState("");
     const [age, setAge] = useState("18");
     const [gender, setGender] = useState("Male");
+    const { showToast } = useToast();
 
     useEffect(() => {
         if (timer > 0) {
@@ -37,18 +38,18 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
     const handleSendOtp = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!/^\d{10}$/.test(mobile)) {
-            toast.error("Please enter a valid 10-digit mobile number");
+            showToast("Please enter a valid 10-digit mobile number", "error");
             return;
         }
 
         setLoading(true);
         try {
             const res = await globalApi.post("auth/send-otp/", { mobile });
-            toast.success("OTP sent successfully");
+            showToast("OTP sent successfully", "success");
             setTimer(30);
             setStep(res.is_user ? "otp" : "signup");
         } catch (err: any) {
-            toast.error(err.response?.data?.error || "Failed to send OTP");
+            showToast(err.response?.data?.error || "Failed to send OTP", "error");
         } finally {
             setLoading(false);
         }
@@ -61,7 +62,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
         e.preventDefault();
 
         if (!/^\d{4,6}$/.test(otp)) {
-            toast.error("Please enter a valid OTP");
+            showToast("Please enter a valid OTP", "error");
             return;
         }
 
@@ -88,8 +89,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
             );
 
             const data = await globalApi.post("auth/verify-customer-otp/", cleanPayload);
-
-            toast.success("Login successful!");
+            showToast("Login successful!", "success");
 
             localStorage.setItem("access", data.access);
             localStorage.setItem("refresh", data.refresh);
@@ -99,7 +99,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
             onLoginSuccess?.(data.user, { access: data.access, refresh: data.refresh });
             onClose();
         } catch (err: any) {
-            toast.error(err.response?.data?.error || "OTP verification failed");
+            showToast(err.response?.data?.error || "OTP verification failed", "error");
         } finally {
             setLoading(false);
         }

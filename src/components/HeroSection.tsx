@@ -3,6 +3,7 @@ import { Shield, Clock, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "../components/SearchBar";
 import { customerApi } from "../api/axios";
+import GetCallbackModal from "./GetCallbackModal";
 
 const HeroSection: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -87,10 +88,10 @@ const HeroSection: React.FC = () => {
               >
                 <img
                   src="/icons/phone.png"
-                  alt="Book via phone"
+                  alt="Get Callback"
                   className="w-6 h-6 object-contain"
                 />
-                Book via Phone
+                Get Callback
               </button>
 
               {/* 💬 Book via WhatsApp */}
@@ -110,36 +111,7 @@ const HeroSection: React.FC = () => {
             </div>
 
             {/* Modal for Phone Booking */}
-            {showPhoneModal && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center relative">
-                  <button
-                    onClick={() => setShowPhoneModal(false)}
-                    className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
-                  >
-                    ✕
-                  </button>
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-3">
-                    Get Assistance in Booking a Lab Test
-                  </h3>
-                  <p className="text-gray-600 mb-5 text-sm">
-                    Our health advisors will connect with you to understand your needs and help you choose the right test.
-                  </p>
-
-                  <div className="space-y-2 text-gray-800">
-                    <p className="font-medium">📞 +918447007794</p>
-                    <p className="font-medium">📞 &nbsp;&nbsp;&nbsp;0120-4207810</p>
-                  </div>
-
-                  <button
-                    onClick={() => setShowPhoneModal(false)}
-                    className="mt-6 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            )}
+            {showPhoneModal && <GetCallbackModal open={showPhoneModal} onClose={() => setShowPhoneModal(false)} />}
 
             {/* Features */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8">

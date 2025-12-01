@@ -10,7 +10,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { customerApi } from "../api/axios";
-import { toast } from "react-toastify";
+import { useToast } from "../context/ToastManager";
 
 interface CartItem {
   id: string;
@@ -27,6 +27,7 @@ const Cart: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   // 🧭 Fetch cart from API
   const fetchCart = async () => {
@@ -58,7 +59,7 @@ const Cart: React.FC = () => {
       setTotalPrice(parseFloat(cartData?.total_price || "0"));
     } catch (err) {
       console.error("Failed to fetch cart:", err);
-      toast.error("Unable to load cart");
+      showToast("Unable to load cart", "error")
     } finally {
       setLoading(false);
     }
@@ -87,11 +88,11 @@ const Cart: React.FC = () => {
       // Option 2 (fallback): if your backend uses `remove/<uuid>/`
       // await customerApi.delete(`carts/remove/${id}/`);
 
-      toast.success("Item removed from cart");
+      showToast("Item removed from cart", "error")
       setCartItems((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
       console.error("Failed to remove item:", err);
-      toast.error("Unable to remove item");
+      showToast("Unable to remove item", "error")
     }
   };
 

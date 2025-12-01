@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ShoppingCart, Trash2, Loader2 } from "lucide-react";
-import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
+import { useToast } from "../context/ToastManager";
 
 interface Props {
   productType: string;
@@ -19,6 +19,7 @@ const CartButton = ({
   const pid = Number(productId);
 
   const { user, isInCart, addToCart, removeFromCart, getCartItemId } = useCart();
+  const { showToast } = useToast();
 
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +30,7 @@ const CartButton = ({
     e.stopPropagation();
 
     if (!user) {
-      toast.info("Please login to continue");
+      showToast("Please login to continue", "info");
       window.dispatchEvent(new Event("login-req"));
       onRequireLogin();
       return;
@@ -40,15 +41,15 @@ const CartButton = ({
     try {
       if (inCart && cartItemId) {
         await removeFromCart(cartItemId);
-        toast.success("Removed from cart");
+        showToast("Removed from cart", "error");
         window.dispatchEvent(new Event("cart-updated"));
       } else {
         await addToCart(productType, pid);
-        toast.success("Added to cart");
+        showToast("Added to cart", "success");
         window.dispatchEvent(new Event("cart-updated"));
       }
     } catch (err) {
-      toast.error("Something went wrong");
+    showToast("Something went wrong", "error");
       console.error(err);
     }
 

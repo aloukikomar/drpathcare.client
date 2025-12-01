@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { customerApi } from "../api/axios";
+import { useToast } from "../context/ToastManager";
 
 export const useAddToCart = () => {
   const [openLogin, setOpenLogin] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const addToCart = async (product: any, productTypeOverride?: string) => {
     const user = localStorage.getItem("user");
@@ -12,7 +13,7 @@ export const useAddToCart = () => {
     // 🔐 If not logged in → open login modal everywhere
     if (!user) {
       setOpenLogin(true);
-      toast.info("Please login to add items to cart");
+      showToast("Please login to add items to cart", "info")
       return;
     }
 
@@ -22,12 +23,11 @@ export const useAddToCart = () => {
         product_type: productTypeOverride || product.productType || product.type,
         product_id: product.id,
       });
-
-      toast.success("Added to cart!");
+      showToast("Added to cart!", "success")
       window.dispatchEvent(new Event("cart-updated"));
     } catch (err) {
       console.error("Add To Cart Error:", err);
-      toast.error("Unable to add item to cart");
+      showToast("Unable to add item to cart", "error")
     } finally {
       setLoading(false);
     }

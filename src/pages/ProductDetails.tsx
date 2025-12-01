@@ -9,11 +9,11 @@ import {
   Clock,
 } from "lucide-react";
 import { globalApi } from "../api/axios";
-import { toast } from "react-toastify";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
 import CartButton from "../components/CartButton";
+import { useToast } from "../context/ToastManager";
 
 // Tag Color
 const getTagColor = (type: string) => {
@@ -47,6 +47,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const { showToast } = useToast();
 
   const type = product_type as "labtest" | "profile" | "package";
 
@@ -64,7 +65,7 @@ const ProductDetails = () => {
         const res = await globalApi.get(endpointMap[type]);
         setProduct(res);
       } catch (err) {
-        toast.error("Unable to load product.");
+        showToast("Unable to load product.", "error");
       }
       setLoading(false);
     };
