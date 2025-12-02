@@ -12,6 +12,7 @@ import ReviewStep from "../components/checkout/ReviewStep";
 import PatientModal from "../components/PatientModal";
 import { customerApi } from "../api/axios";
 import { useToast } from "../context/ToastManager";
+import { useCart } from "../context/CartContext";
 
 const CheckoutInner: React.FC = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const CheckoutInner: React.FC = () => {
   const [bookingCreated, setBookingCreated] = useState(false);
   const [bookingId, setBookingId] = useState<string>("");
   const { showToast } = useToast();
+  const {fetchCart} = useCart();
 
   // open patient modal
   const openPatientModal = (item: any, editPatient?: any) => {
@@ -93,12 +95,16 @@ const CheckoutInner: React.FC = () => {
 
       try {
         await customerApi.post("carts/clear/");
+        fetchCart()
+        window.dispatchEvent(new Event("cart-updated"));
       } catch {
         try {
           const cr = await customerApi.get("carts/");
           const cart = cr?.data ?? cr;
           const obj = Array.isArray(cart) ? cart[0] : (cart?.results ? cart.results[0] : cart);
           if (obj?.id) await customerApi.delete(`carts/${obj.id}/`);
+          fetchCart()
+          window.dispatchEvent(new Event("cart-updated"));
         } catch {}
       }
 

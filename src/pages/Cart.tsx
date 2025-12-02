@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import {
-  Trash2,
   TestTubeDiagonal,
   Microscope,
   ClipboardList,
@@ -11,6 +10,7 @@ import {
 } from "lucide-react";
 import { customerApi } from "../api/axios";
 import { useToast } from "../context/ToastManager";
+import CartButton from "../components/CartButton";
 
 interface CartItem {
   id: string;
@@ -78,23 +78,6 @@ const Cart: React.FC = () => {
       window.removeEventListener("cart-updated", handleCartUpdate);
     };
   }, []);
-
-  // 🧹 Remove item
-  const handleRemoveItem = async (id: string) => {
-    try {
-      // Option 1: Backend has a dedicated endpoint (recommended)
-      await customerApi.delete(`carts/items/${id}/`);
-
-      // Option 2 (fallback): if your backend uses `remove/<uuid>/`
-      // await customerApi.delete(`carts/remove/${id}/`);
-
-      showToast("Item removed from cart", "error")
-      setCartItems((prev) => prev.filter((item) => item.id !== id));
-    } catch (err) {
-      console.error("Failed to remove item:", err);
-      showToast("Unable to remove item", "error")
-    }
-  };
 
   const handleRowClick = (item: CartItem) => {
     navigate(`/product-details/${item.product_type.toLowerCase()}/${item.product_id}`);
@@ -228,26 +211,35 @@ const Cart: React.FC = () => {
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => {
               const { icon, color } = getTypeInfo(item.product_type);
+
               return (
                 <div
                   key={item.id}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 
-                   flex flex-col sm:flex-row sm:items-start sm:justify-between 
-                   gap-4 hover:shadow-md transition"
+                  className="
+          bg-white rounded-xl border border-gray-200 shadow-sm 
+          p-4 sm:p-5 
+          flex flex-col sm:flex-row items-start sm:items-center 
+          justify-between gap-4 transition hover:shadow-md
+        "
                 >
                   {/* LEFT SECTION */}
                   <div
-                    className="flex items-start gap-3 flex-1 cursor-pointer"
+                    className="flex items-start gap-4 flex-1 w-full cursor-pointer"
                     onClick={() => handleRowClick(item)}
                   >
+                    {/* ICON */}
                     <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center ${color}`}
+                      className={`
+              w-12 h-12 sm:w-16 sm:h-16 rounded-xl 
+              flex items-center justify-center flex-shrink-0 ${color}
+            `}
                     >
                       {icon}
                     </div>
 
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-base sm:text-lg text-gray-900 leading-snug">
+                    {/* TEXT */}
+                    <div className="flex flex-col flex-1">
+                      <h3 className="font-semibold text-base sm:text-lg text-gray-900 leading-tight">
                         {item.name}
                       </h3>
 
@@ -258,8 +250,10 @@ const Cart: React.FC = () => {
                   </div>
 
                   {/* RIGHT SECTION */}
-                  <div className="flex flex-row sm:flex-col items-end sm:items-end justify-between sm:justify-start gap-2">
-                    <div className="text-right sm:text-right">
+                  <div className="flex flex-row sm:flex-col items-end sm:items-end gap-2 w-full sm:w-auto">
+
+                    {/* PRICE */}
+                    <div className="text-right">
                       <p className="text-base sm:text-lg font-semibold text-gray-900">
                         ₹{item.offer_price || item.price}
                       </p>
@@ -271,12 +265,12 @@ const Cart: React.FC = () => {
                       )}
                     </div>
 
-                    <button
-                      onClick={() => handleRemoveItem(item.id)}
-                      className="text-red-600 hover:text-red-800 flex items-center text-xs sm:text-sm font-medium"
-                    >
-                      <Trash2 className="w-4 h-4 mr-1" /> Remove
-                    </button>
+                    {/* CART BUTTON */}
+                    <CartButton
+                      // compact
+                      productType={item.product_type}
+                      productId={"" + item.product_id}
+                    />
                   </div>
                 </div>
               );
