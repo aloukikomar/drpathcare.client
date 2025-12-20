@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Brain, Droplets, Activity, Eye, Bone, Stethoscope, Zap } from 'lucide-react';
+import { Heart, Droplets, Activity, Bone, Stethoscope, Zap } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -14,8 +14,8 @@ interface Category {
 const TestCategories: React.FC = () => {
   const categories: Category[] = [
     {
-      id: 'heart-health',
-      name: 'Heart Health',
+      id: 'heart',
+      name: 'Heart',
       description: 'Cardiovascular tests and screenings',
       icon: <Heart className="w-6 h-6" />,
       testCount: 25,
@@ -30,9 +30,9 @@ const TestCategories: React.FC = () => {
       color: 'bg-blue-100 text-blue-600'
     },
     {
-      id: 'thyroid',
-      name: 'Thyroid',
-      description: 'Thyroid function and hormone tests',
+      id: 'hormones',
+      name: 'Hormones',
+      description: 'General hormone tests',
       icon: <Zap className="w-6 h-6" />,
       testCount: 12,
       color: 'bg-yellow-100 text-yellow-600'
@@ -61,22 +61,7 @@ const TestCategories: React.FC = () => {
       testCount: 10,
       color: 'bg-orange-100 text-orange-600'
     },
-    {
-      id: 'eye-health',
-      name: 'Eye Health',
-      description: 'Vision and eye health screenings',
-      icon: <Eye className="w-6 h-6" />,
-      testCount: 8,
-      color: 'bg-teal-100 text-teal-600'
-    },
-    {
-      id: 'brain-health',
-      name: 'Brain Health',
-      description: 'Neurological and cognitive tests',
-      icon: <Brain className="w-6 h-6" />,
-      testCount: 14,
-      color: 'bg-indigo-100 text-indigo-600'
-    }
+
   ];
 
   return (
@@ -91,7 +76,7 @@ const TestCategories: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Link
               key={category.id}
@@ -130,7 +115,7 @@ const TestCategories: React.FC = () => {
 
         <div className="text-center mt-12">
           <Link
-            to="/categories"
+            to="/products"
             className="
                       inline-flex items-center font-medium
                       text-primary
@@ -139,7 +124,7 @@ const TestCategories: React.FC = () => {
                       hover:bg-gradient-to-r hover:from-primary hover:to-secondary
                     "
           >
-            View All Categories
+            View All Tests
             <svg
               className="ml-2 w-4 h-4"
               fill="none"

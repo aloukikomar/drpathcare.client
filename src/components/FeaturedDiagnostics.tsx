@@ -23,6 +23,13 @@ interface Product {
 
 const tabs = [
   {
+    label: "Packages",
+    value: "lab-packages",
+    type: "Package",
+    icon: <ClipboardList className="w-6 h-6 text-orange-600" />,
+    color: "text-orange-600 border-orange-600",
+  },
+  {
     label: "Lab Tests",
     value: "lab-tests",
     type: "LabTest",
@@ -36,17 +43,10 @@ const tabs = [
   //   icon: <Microscope className="w-6 h-6 text-green-600" />,
   //   color: "text-green-600 border-green-600",
   // },
-  {
-    label: "Packages",
-    value: "lab-packages",
-    type: "Package",
-    icon: <ClipboardList className="w-6 h-6 text-orange-600" />,
-    color: "text-orange-600 border-orange-600",
-  },
 ];
 
 const FeaturedDiagnostics: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("lab-tests");
+  const [activeTab, setActiveTab] = useState("lab-packages");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
@@ -71,7 +71,7 @@ const FeaturedDiagnostics: React.FC = () => {
 
 
   const currentTab = tabs.find((t) => t.value === activeTab);
-  const currentType = (currentTab?.type || "LabTest") as "LabTest" | "Profile" | "Package";
+  const currentType = (currentTab?.type || "Package") as "LabTest" | "Profile" | "Package";
 
   return (
     <section className="py-16 bg-gray-50">
