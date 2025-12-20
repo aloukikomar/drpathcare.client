@@ -6,9 +6,15 @@ import type {
   InternalAxiosRequestConfig,
 } from "axios";
 
+/* ---------------------------------------------------
+   Base URL
+---------------------------------------------------- */
 const BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/";
 
+/* ---------------------------------------------------
+   Types
+---------------------------------------------------- */
 interface TypedAxiosInstance {
   get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
@@ -18,43 +24,68 @@ interface TypedAxiosInstance {
 }
 
 /* ---------------------------------------------------
-   Helper: Create a clean Axios instance with unified handling
+   🔥 URL Normalizer (FIXES DRF http pagination)
+---------------------------------------------------- */
+const normalizeUrl = (url?: string) => {
+  if (!url) return url;
+
+  // Force HTTPS for absolute URLs returned by backend
+  if (url.startsWith("http://")) {
+    return url.replace(/^http:\/\//i, "https://");
+  }
+
+  return url;
+};
+
+/* ---------------------------------------------------
+   Create Axios Instance
 ---------------------------------------------------- */
 const createApiInstance = (): TypedAxiosInstance => {
   const instance = axios.create({
     baseURL: BASE_URL,
     timeout: 15000,
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 
   /* ---------------------------------------------------
-     RESPONSE INTERCEPTOR  (✔ unified)
-     - unwrap all successful responses
-     - handle 401 logout globally
-     - handle backend error messages
+     REQUEST INTERCEPTOR
+     - Normalize absolute URLs (pagination, media, etc.)
+  ---------------------------------------------------- */
+  instance.interceptors.request.use(
+    (config: InternalAxiosRequestConfig) => {
+      if (config.url) {
+        config.url = normalizeUrl(config.url);
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  /* ---------------------------------------------------
+     RESPONSE INTERCEPTOR
+     - Always unwrap response.data
+     - Global 401 handling
+     - Clean error messages
   ---------------------------------------------------- */
   instance.interceptors.response.use(
-    (response: AxiosResponse) => {
-      return response.data; // always unwrap
-    },
+    (response: AxiosResponse) => response.data,
 
     async (error: AxiosError) => {
       const status = error.response?.status;
 
-      // 🔥 GLOBAL 401 HANDLING — ALWAYS WORKS
+      // 🔐 Global auth failure handling
       if (status === 401) {
-        console.warn("401 Unauthorized — clearing session…");
-
         localStorage.removeItem("user");
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
 
-        // Hard reload to login/homepage
         window.location.href = "/";
         return;
       }
 
-      // Extract backend error message
+      // Extract backend message safely
       const serverError =
         (error.response?.data as any)?.detail ||
         (error.response?.data as any)?.message;
@@ -83,7 +114,7 @@ export const globalApi = createApiInstance();
 export const customerApi = createApiInstance();
 
 /* ---------------------------------------------------
-   REQUEST INTERCEPTOR (Auth Token)
+   Auth Token Injection
 ---------------------------------------------------- */
 (customerApi as any).interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
