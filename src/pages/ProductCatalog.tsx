@@ -90,6 +90,7 @@ const ProductCatalog: React.FC = () => {
       PRODUCT_TYPE_OPTIONS.find((t) => t.value === productType)?.endpoint ||
       "client/lab-tests/";
     const params = new URLSearchParams();
+    params.set("page_size", "9");
     if (searchTerm) params.set("search", searchTerm);
     if (category) params.set("category", category);
     return `${base}?${params.toString()}`;
