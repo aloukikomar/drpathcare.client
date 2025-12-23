@@ -137,7 +137,7 @@ const FeaturedDiagnostics: React.FC = () => {
         {/* View All */}
         <div className="text-center mt-12">
           <Link
-            to={`/products?product_type=${activeTab.replace("lab-", "lab_").replace("lab_tests","lab_test")}`}
+            to={`/products?product_type=${activeTab.replace("lab-", "lab_").replace("lab_tests","lab_test").replace("lab_packages","lab_package")}`}
             className="
                       inline-flex items-center px-8 py-3 rounded-lg font-medium
                       text-white bg-primary
