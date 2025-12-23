@@ -92,6 +92,7 @@ const ProductCatalog: React.FC = () => {
     const params = new URLSearchParams();
     params.set("page_size", "9");
     if (searchTerm) params.set("search", searchTerm);
+    if (category) params.set("category", category);
     if (sortBy === "price-low") {
       params.set("ordering", "offer_price");
     } else if (sortBy === "price-high") {
