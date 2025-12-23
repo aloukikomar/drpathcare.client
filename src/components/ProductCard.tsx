@@ -18,6 +18,8 @@ interface Product {
   description?: string;
   tests?: any[];
   profiles?: any[];
+  package_total_test?:number;
+  test_count?: any[]
 }
 
 interface ProductCardProps {
@@ -56,7 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   product,
   productType,
 }) => {
-  const { id, name, price, offer_price, category_name, reported_on, tests, profiles } =
+  const { id, name, price, offer_price, category_name, reported_on, test_count, profiles,package_total_test } =
     product;
 
   return (
@@ -99,9 +101,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
             Total Profiles: {profiles.length}
           </p>
         )}
-        {tests && tests.length > 0 && (
+        {productType == 'LabTest' && test_count && (
           <p className="text-xs text-gray-500 mb-2">
-            Total Tests: {tests.length}
+            Total Tests: {test_count}
+          </p>
+        )}
+        {productType == 'Package' && package_total_test && (
+          <p className="text-xs text-gray-500 mb-2">
+            Total Tests: {package_total_test}
           </p>
         )}
 

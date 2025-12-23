@@ -35,9 +35,15 @@ interface PaginatedResponse<T> {
 
 const PRODUCT_TYPE_OPTIONS = [
   { label: "Lab Tests", value: "lab_test", endpoint: "client/lab-tests/" },
-  { label: "Lab Profiles", value: "lab_profile", endpoint: "client/lab-profiles/" },
+  // { label: "Lab Profiles", value: "lab_profile", endpoint: "client/lab-profiles/" },
   { label: "Lab Packages", value: "lab_package", endpoint: "client/lab-packages/" },
 ];
+
+const CATEGORY_ENTITY_MAP: Record<string, string> = {
+  lab_test: "lab_test",
+  lab_profile: "lab_profile",
+  lab_package: "lab_package",
+};
 
 const ProductCatalog: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,17 +70,18 @@ const ProductCatalog: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const { showToast } = useToast();
 
-  const fetchCategories = async () => {
-    try {
-      const res = await globalApi.get("client/lab-category/");
+  const fetchCategories = async (type: string) => {
+  try {
+    const res = await globalApi.get(
+      `client/lab-category/?page=1&page_size=1000&entity_type=${CATEGORY_ENTITY_MAP[type]}`
+    );
 
-      // res.data.results contains the list
-      setCategories(res.data?.results || []);
-      console.log("Categories:", res.data);
-    } catch (err) {
-      console.error("Failed to fetch categories:", err);
-    }
-  };
+    setCategories(res.results || []);
+  } catch (err) {
+    console.error("Failed to fetch categories:", err);
+    setCategories([]);
+  }
+};
 
   // 🧭 Build API URL
   const buildApiUrl = (pageUrl?: string): string => {
@@ -148,8 +155,9 @@ const ProductCatalog: React.FC = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+  fetchCategories(productType);
+  setCategory(""); // reset selected category on type change
+}, [productType]);
 
   useEffect(() => {
     fetchProducts();
@@ -245,6 +253,7 @@ const ProductCatalog: React.FC = () => {
             {/* 🔽 Sort */}
             <div>
               <select
+                disabled
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"

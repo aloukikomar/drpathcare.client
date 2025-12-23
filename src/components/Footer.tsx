@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Phone, MapPin, MapPinned } from 'lucide-react';
 import globalApi from '../api/axios';
+import DeveloperDetailsModal from './MyPopup';
 
 const Footer: React.FC = () => {
   const [form, setForm] = useState({ name: "", mobile: "", enquiry: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [openDevPopup, setOpenDevPopup] = useState(false);
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,10 +177,14 @@ const Footer: React.FC = () => {
 
               <span className="text-gray-400">
                 Built by{" "}
-                <a href="https://meku.dev" target="_blank" className="text-primary hover:text-secondary">
+              
+                <a onClick={()=>setOpenDevPopup(true)} target="_blank" className="text-primary hover:text-secondary">
                   Aloukik Omar
                 </a>
               </span>
+              <DeveloperDetailsModal 
+              isOpen={openDevPopup}
+              onClose={() => setOpenDevPopup(false)} />
             </div>
           </div>
 

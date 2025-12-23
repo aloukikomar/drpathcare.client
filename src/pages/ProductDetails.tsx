@@ -73,6 +73,99 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id, type]);
 
+  const getAccordionData = (type: string, product: any) => {
+    if (!product) return [];
+
+    if (type === "package" || type === "profile") {
+      return product.tests || [];
+    }
+
+    // labtest
+    return [
+      {
+        id: product.id,
+        name: product.name,
+        test_count: product.test_count || product.child_tests?.length || 0,
+        child_tests: product.child_tests || [],
+      },
+    ];
+  };
+
+  const TestAccordion = ({ items, total_tests }: { items: any[], total_tests: 0 }) => {
+    const [openId, setOpenId] = useState<number | null>(null);
+
+    if (!items.length) return null;
+
+    return (
+      <div className="mt-8 mb-10 space-y-3">
+        {/* 👆 fixed bottom spacing */}
+
+        <h3 className="text-xl font-bold text-gray-900 mb-3">
+          {total_tests > 1 ? total_tests : ''} Tests Included
+        </h3>
+
+        {items.map((test) => {
+          const hasChildren = test.child_tests && test.child_tests.length > 0;
+          const isOpen = openId === test.id;
+
+          return (
+            <div
+              key={test.id}
+              className={`bg-white rounded-xl border shadow-sm overflow-hidden
+              ${!hasChildren ? "opacity-70" : ""}
+            `}
+            >
+              {/* HEADER */}
+              <button
+                disabled={!hasChildren}
+                onClick={() => hasChildren && setOpenId(isOpen ? null : test.id)}
+                className={`w-full flex items-center justify-between px-5 py-4 text-left
+                ${hasChildren
+                    ? "hover:bg-gray-50 cursor-pointer"
+                    : "cursor-default"}
+              `}
+              >
+                <div>
+                  <p className="font-semibold text-gray-900">
+                    {test.name}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {test.test_count || test.child_tests?.length || 0} tests
+                  </p>
+                </div>
+
+                {/* RIGHT ACTION */}
+                {hasChildren && (
+                  <span className="text-sm font-medium text-primary">
+                    {isOpen ? "Hide" : "View"}
+                  </span>
+                )}
+              </button>
+
+              {/* BODY */}
+              {isOpen && hasChildren && (
+                <div className="border-t px-5 py-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
+                    {test.child_tests.map((child: string, idx: number) => (
+                      <div
+                        key={idx}
+                        className="border rounded-lg px-3 py-2 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 transition"
+                      >
+                        {child}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header showSearch />
@@ -177,7 +270,7 @@ const ProductDetails = () => {
                           : type === "profile"
                             ? "Profile"
                             : "Package"
-                            } productId={product.id} />
+                      } productId={product.id} />
                     </div>
 
 
@@ -204,6 +297,11 @@ const ProductDetails = () => {
                     {product.description}
                   </div>
                 )}
+                {(product.package_total_test || product.test_count > 1) &&
+                  <TestAccordion
+                    items={getAccordionData(type, product)} total_tests={type == 'package' ? product.package_total_test : product.test_count}
+                  />
+                }
 
                 {/* INFO CARDS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
