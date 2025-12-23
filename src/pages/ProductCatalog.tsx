@@ -92,7 +92,12 @@ const ProductCatalog: React.FC = () => {
     const params = new URLSearchParams();
     params.set("page_size", "9");
     if (searchTerm) params.set("search", searchTerm);
-    if (category) params.set("category", category);
+    if (sortBy === "price-low") {
+      params.set("ordering", "offer_price");
+    } else if (sortBy === "price-high") {
+      params.set("ordering", "-offer_price");
+    }
+
     return `${base}?${params.toString()}`;
   };
 
@@ -103,23 +108,7 @@ const ProductCatalog: React.FC = () => {
       const data = await globalApi.get<PaginatedResponse<Product>>(
         buildApiUrl(pageUrl)
       );
-      let results = data.results;
-
-      if (sortBy === "price-low") {
-        results = [...results].sort(
-          (a, b) =>
-            parseFloat(a.offer_price || a.price) -
-            parseFloat(b.offer_price || b.price)
-        );
-      } else if (sortBy === "price-high") {
-        results = [...results].sort(
-          (a, b) =>
-            parseFloat(b.offer_price || b.price) -
-            parseFloat(a.offer_price || a.price)
-        );
-      }
-
-      setProducts(results);
+      setProducts(data.results);
       setCount(data.count);
       setNextPage(data.next);
       setPrevPage(data.previous);
@@ -150,14 +139,14 @@ const ProductCatalog: React.FC = () => {
 
   // 🪄 Hooks
   useEffect(() => {
-  const pt = searchParams.get("product_type") || "lab_test";
-  const cat = searchParams.get("category") || "";
-  const search = searchParams.get("search") || "";
+    const pt = searchParams.get("product_type") || "lab_test";
+    const cat = searchParams.get("category") || "";
+    const search = searchParams.get("search") || "";
 
-  setProductType(pt);
-  setCategory(cat);
-  setSearchTerm(search);
-}, [searchParams]);
+    setProductType(pt);
+    setCategory(cat);
+    setSearchTerm(search);
+  }, [searchParams]);
 
 
   useEffect(() => {
@@ -239,6 +228,7 @@ const ProductCatalog: React.FC = () => {
             {/* 🏷 Category */}
             <div>
               <select
+                disabled={productType == 'lab_test' ? false : true}
                 value={category}
                 onChange={(e) => {
                   setCategory(e.target.value);
@@ -248,7 +238,7 @@ const ProductCatalog: React.FC = () => {
                     ...(searchTerm && { search: searchTerm }),
                   });
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className={"w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary "}
               >
                 <option value="">All Categories</option>
                 {categories.map((cat) => (
@@ -262,15 +252,15 @@ const ProductCatalog: React.FC = () => {
             {/* 🔽 Sort */}
             <div>
               <select
-                disabled
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
-                <option value="popularity">Sort: Popularity</option>
+                <option value="">Recommended</option>
                 <option value="price-low">Price: Low → High</option>
                 <option value="price-high">Price: High → Low</option>
               </select>
+
             </div>
           </div>
         </div>

@@ -146,14 +146,15 @@ const ProductDetails = () => {
               {isOpen && hasChildren && (
                 <div className="border-t px-5 py-4">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
-                    {test.child_tests.map((child: string, idx: number) => (
-                      <div
-                        key={idx}
-                        className="border rounded-lg px-3 py-2 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 transition"
-                      >
-                        {child}
-                      </div>
-                    ))}
+                    {test.child_tests.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+                      .map((child, idx) => (
+                        <div
+                          key={idx}
+                          className="border rounded-lg px-3 py-2 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 transition"
+                        >
+                          {child}
+                        </div>
+                      ))}
                   </div>
                 </div>
               )}
