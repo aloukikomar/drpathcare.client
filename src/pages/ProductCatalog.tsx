@@ -71,17 +71,17 @@ const ProductCatalog: React.FC = () => {
   const { showToast } = useToast();
 
   const fetchCategories = async (type: string) => {
-  try {
-    const res = await globalApi.get(
-      `client/lab-category/?page=1&page_size=1000&entity_type=${CATEGORY_ENTITY_MAP[type]}`
-    );
+    try {
+      const res = await globalApi.get(
+        `client/lab-category/?page=1&page_size=1000&entity_type=${CATEGORY_ENTITY_MAP[type]}`
+      );
 
-    setCategories(res.results || []);
-  } catch (err) {
-    console.error("Failed to fetch categories:", err);
-    setCategories([]);
-  }
-};
+      setCategories(res.results || []);
+    } catch (err) {
+      console.error("Failed to fetch categories:", err);
+      setCategories([]);
+    }
+  };
 
   // 🧭 Build API URL
   const buildApiUrl = (pageUrl?: string): string => {
@@ -150,15 +150,24 @@ const ProductCatalog: React.FC = () => {
 
   // 🪄 Hooks
   useEffect(() => {
-    setProductType(searchParams.get("product_type") || "lab_test");
-    setCategory(searchParams.get("category") || "");
-    setSearchTerm(searchParams.get("search") || "");
-  }, [searchParams]);
+  const pt = searchParams.get("product_type") || "lab_test";
+  const cat = searchParams.get("category") || "";
+  const search = searchParams.get("search") || "";
+
+  setProductType(pt);
+  setCategory(cat);
+  setSearchTerm(search);
+}, [searchParams]);
+
 
   useEffect(() => {
-  fetchCategories(productType);
-  setCategory(""); // reset selected category on type change
-}, [productType]);
+    fetchCategories(productType);
+
+    // only reset category if it's NOT coming from URL
+    if (!searchParams.get("category")) {
+      setCategory("");
+    }
+  }, [productType]);
 
   useEffect(() => {
     fetchProducts();
@@ -214,7 +223,6 @@ const ProductCatalog: React.FC = () => {
                   setProductType(e.target.value);
                   setSearchParams({
                     product_type: e.target.value,
-                    ...(category && { category }),
                     ...(searchTerm && { search: searchTerm }),
                   });
                 }}

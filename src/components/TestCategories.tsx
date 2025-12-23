@@ -14,7 +14,7 @@ interface Category {
 const TestCategories: React.FC = () => {
   const categories: Category[] = [
     {
-      id: 'heart',
+      id: '240',
       name: 'Heart',
       description: 'Cardiovascular tests and screenings',
       icon: <Heart className="w-6 h-6" />,
@@ -22,7 +22,7 @@ const TestCategories: React.FC = () => {
       color: 'bg-red-100 text-red-600'
     },
     {
-      id: 'diabetes',
+      id: '242',
       name: 'Diabetes',
       description: 'Blood sugar and diabetes monitoring',
       icon: <Droplets className="w-6 h-6" />,
@@ -30,7 +30,7 @@ const TestCategories: React.FC = () => {
       color: 'bg-blue-100 text-blue-600'
     },
     {
-      id: 'hormones',
+      id: '250',
       name: 'Hormones',
       description: 'General hormone tests',
       icon: <Zap className="w-6 h-6" />,
@@ -38,7 +38,7 @@ const TestCategories: React.FC = () => {
       color: 'bg-yellow-100 text-yellow-600'
     },
     {
-      id: 'liver-function',
+      id: '241',
       name: 'Liver Function',
       description: 'Liver health and enzyme tests',
       icon: <Activity className="w-6 h-6" />,
@@ -46,7 +46,7 @@ const TestCategories: React.FC = () => {
       color: 'bg-green-100 text-green-600'
     },
     {
-      id: 'kidney-function',
+      id: '244',
       name: 'Kidney Function',
       description: 'Kidney health and function tests',
       icon: <Stethoscope className="w-6 h-6" />,
@@ -54,7 +54,7 @@ const TestCategories: React.FC = () => {
       color: 'bg-purple-100 text-purple-600'
     },
     {
-      id: 'bone-health',
+      id: '247',
       name: 'Bone Health',
       description: 'Bone density and mineral tests',
       icon: <Bone className="w-6 h-6" />,
