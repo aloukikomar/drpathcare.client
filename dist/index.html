@@ -2,25 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="https://drpathcare.com/favicon1.png" />
+
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://drpathcare.com/favicon1.png"
+    />
+
     <title>Dr Pathcare</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <meta name="generator" content="Aloukik Omar" />
     <meta name="description" content="Dr Pathcare by Aloukik Omar" />
     <meta name="author" content="Aloukik Omar" />
 
+    <!-- Open Graph -->
     <meta property="og:title" content="Dr Pathcare" />
     <meta property="og:description" content="Dr Pathcare by Aloukik Omar" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://drpathcare.com/favicon1.png" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="https://drpathcare.com/" />
     <meta name="twitter:image" content="https://drpathcare.com/favicon1.png" />
-    <script type="module" crossorigin src="/assets/index-B9eZR_ZV.js"></script>
+
+    <!-- ========================= -->
+    <!-- Google Analytics (GA4) -->
+    <!-- ========================= -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-ZMLBM5GTYV"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZMLBM5GTYV', {
+        send_page_view: false
+      });
+    </script>
+    <!-- We disable auto page_view because React Router handles it -->
+    <script type="module" crossorigin src="/assets/index-BwAySFHV.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-CPvpswas.css">
   </head>
+
   <body>
     <div id="root"></div>
   </body>
