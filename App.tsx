@@ -19,6 +19,7 @@ import Refund from "./src/components/policies/Refund";
 import HomeCollection from "./src/components/policies/HomeCollection";
 
 import ScrollToTop from "./src/utils/ScrollToTop";     // ✅ Added
+import GoogleAnalyticsTracker from "./src/components/GoogleAnalyticsTracker"
 import { CartProvider } from "./src/context/CartContext";
 import { ToastProvider } from "./src/context/ToastManager";
 
@@ -28,6 +29,7 @@ const App: React.FC = () => {
       <ToastProvider>
         <CartProvider>
           <Router>
+            <GoogleAnalyticsTracker /> 
             <ScrollToTop />  {/* ✅ Scroll to top on route change */}
 
             <main className="min-h-screen">
