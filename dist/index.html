@@ -1,55 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="https://drpathcare.com/favicon1.png"
-    />
+<head>
+  <meta charset="UTF-8" />
 
-    <title>Dr Pathcare</title>
+  <!-- ========================= -->
+  <!-- FAVICONS (GOOGLE SAFE) -->
+  <!-- ========================= -->
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dr Pathcare</title>
 
-    <meta name="generator" content="Aloukik Omar" />
-    <meta name="description" content="Dr Pathcare by Aloukik Omar" />
-    <meta name="author" content="Aloukik Omar" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Dr Pathcare" />
-    <meta property="og:description" content="Dr Pathcare by Aloukik Omar" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://drpathcare.com/favicon1.png" />
+  <meta name="generator" content="Aloukik Omar" />
+  <meta name="description" content="Dr Pathcare by Aloukik Omar" />
+  <meta name="author" content="Aloukik Omar" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="https://drpathcare.com/" />
-    <meta name="twitter:image" content="https://drpathcare.com/favicon1.png" />
+  <!-- ========================= -->
+  <!-- OPEN GRAPH -->
+  <!-- ========================= -->
+  <meta property="og:title" content="Dr Pathcare" />
+  <meta property="og:description" content="Dr Pathcare by Aloukik Omar" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://drpathcare.com/og-image.png" />
+  <meta property="og:url" content="https://drpathcare.com/" />
 
-    <!-- ========================= -->
-    <!-- Google Analytics (GA4) -->
-    <!-- ========================= -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-ZMLBM5GTYV"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+  <!-- ========================= -->
+  <!-- TWITTER -->
+  <!-- ========================= -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="https://drpathcare.com/" />
+  <meta name="twitter:image" content="https://drpathcare.com/og-image.png" />
 
-      gtag('config', 'G-ZMLBM5GTYV', {
-        send_page_view: false
-      });
-    </script>
-    <!-- We disable auto page_view because React Router handles it -->
-    <script type="module" crossorigin src="/assets/index-BwAySFHV.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CPvpswas.css">
-  </head>
+  <!-- ========================= -->
+  <!-- GOOGLE ANALYTICS (GA4) -->
+  <!-- ========================= -->
 
-  <body>
-    <div id="root"></div>
-  </body>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZMLBM5GTYV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-ZMLBM5GTYV', {
+      send_page_view: false
+    });
+  </script>
+  <!-- We disable auto page_view because React Router handles it -->
+  <script type="module" crossorigin src="/assets/index-BwAySFHV.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CPvpswas.css">
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
 </html>
