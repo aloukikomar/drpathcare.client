@@ -148,33 +148,33 @@ const HeroSection: React.FC = () => {
           </div>
 
           {/* Slideshow Banner */}
-          <div className="hidden lg:block relative">
-            <div className="relative w-full h-96 lg:h-[500px] overflow-hidden rounded-2xl shadow-2xl">
+          <div className="hidden lg:flex justify-center">
+            <div className="relative w-[500px] aspect-square overflow-hidden rounded-2xl shadow-2xl">
 
-              <div className="absolute inset-0">
-                <AnimatePresence>
-                  <motion.img
-                    key={currentImageIndex}
-                    src={banners[currentImageIndex]}
-                    alt="Banner"
-                    className="absolute inset-0 w-full h-full object-cover"
+              <AnimatePresence>
+                <motion.img
+                  key={currentImageIndex}
+                  src={banners[currentImageIndex]}
+                  alt="Banner"
+                  className="absolute inset-0 w-full h-full object-cover"
 
-                    initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
+                  initial={{ opacity: 0, scale: 1.03 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
 
-                    transition={{
-                      opacity: { duration: 0.8, ease: "easeInOut" },
-                      scale: { duration: 3, ease: "easeOut" }
-                    }}
+                  transition={{
+                    opacity: { duration: 0.6, ease: "easeInOut" },
+                    scale: { duration: 2.5, ease: "easeOut" },
+                  }}
 
-                    loading="lazy"
-                  />
-                </AnimatePresence>
-              </div>
+                  loading="lazy"
+                />
+              </AnimatePresence>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl" />
 
+              {/* Dots */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
                 {banners.map((_, index) => (
                   <button
@@ -188,6 +188,7 @@ const HeroSection: React.FC = () => {
 
             </div>
           </div>
+
 
         </div>
       </div>

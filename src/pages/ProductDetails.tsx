@@ -104,63 +104,64 @@ const ProductDetails = () => {
           {total_tests > 1 ? total_tests : ''} Tests Included
         </h3>
 
-        {items.map((test) => {
-          const hasChildren = test.child_tests && test.child_tests.length > 0;
-          const isOpen = openId === test.id;
+        {items.sort((a, b) => a.name.localeCompare(b.name))
+          .map((test) => {
+            const hasChildren = test.child_tests && test.child_tests.length > 0;
+            const isOpen = openId === test.id;
 
-          return (
-            <div
-              key={test.id}
-              className={`bg-white rounded-xl border shadow-sm overflow-hidden
+            return (
+              <div
+                key={test.id}
+                className={`bg-white rounded-xl border shadow-sm overflow-hidden
               ${!hasChildren ? "opacity-70" : ""}
             `}
-            >
-              {/* HEADER */}
-              <button
-                disabled={!hasChildren}
-                onClick={() => hasChildren && setOpenId(isOpen ? null : test.id)}
-                className={`w-full flex items-center justify-between px-5 py-4 text-left
-                ${hasChildren
-                    ? "hover:bg-gray-50 cursor-pointer"
-                    : "cursor-default"}
-              `}
               >
-                <div>
-                  <p className="font-semibold text-gray-900">
-                    {test.name}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {test.test_count || test.child_tests?.length || 0} tests
-                  </p>
-                </div>
-
-                {/* RIGHT ACTION */}
-                {hasChildren && (
-                  <span className="text-sm font-medium text-primary">
-                    {isOpen ? "Hide" : "View"}
-                  </span>
-                )}
-              </button>
-
-              {/* BODY */}
-              {isOpen && hasChildren && (
-                <div className="border-t px-5 py-4">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
-                    {test.child_tests.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-                      .map((child, idx) => (
-                        <div
-                          key={idx}
-                          className="border rounded-lg px-3 py-2 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 transition"
-                        >
-                          {child}
-                        </div>
-                      ))}
+                {/* HEADER */}
+                <button
+                  disabled={!hasChildren}
+                  onClick={() => hasChildren && setOpenId(isOpen ? null : test.id)}
+                  className={`w-full flex items-center justify-between px-5 py-4 text-left
+                ${hasChildren
+                      ? "hover:bg-gray-50 cursor-pointer"
+                      : "cursor-default"}
+              `}
+                >
+                  <div>
+                    <p className="font-semibold text-gray-900">
+                      {test.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {test.test_count || test.child_tests?.length || 0} tests
+                    </p>
                   </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
+
+                  {/* RIGHT ACTION */}
+                  {hasChildren && (
+                    <span className="text-sm font-medium text-primary">
+                      {isOpen ? "Hide" : "View"}
+                    </span>
+                  )}
+                </button>
+
+                {/* BODY */}
+                {isOpen && hasChildren && (
+                  <div className="border-t px-5 py-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
+                      {test.child_tests.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+                        .map((child, idx) => (
+                          <div
+                            key={idx}
+                            className="border rounded-lg px-3 py-2 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 transition"
+                          >
+                            {child}
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
       </div>
     );
   };
