@@ -129,16 +129,27 @@ const GetCallbackModal: React.FC<Props> = ({ open, onClose }) => {
                     <div className="text-xs text-gray-500 mb-2">Or call us directly</div>
 
                     <div className="font-semibold flex justify-center items-center gap-3">
-                        <span>
+                        <a href="tel:+918447007794">
                             <button
-                                className=" p-3 w-full py-2.5 rounded-lg text-white text-sm font-medium transition-all bg-primary hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:shadow-md"
-                            >+91 8447007794</button></span>
+                                className="p-3 w-full py-2.5 rounded-lg text-white text-sm font-medium transition-all 
+                 bg-primary hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:shadow-md"
+                            >
+                                +91 8447007794
+                            </button>
+                        </a>
+
                         <span className="text-gray-400">|</span>
-                        <span>
+
+                        <a href="tel:01204207810">
                             <button
-                                className=" p-3 w-full py-2.5 rounded-lg text-white text-sm font-medium transition-all bg-primary hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:shadow-md"
-                            >0120-4207810</button></span>
+                                className="p-3 w-full py-2.5 rounded-lg text-white text-sm font-medium transition-all 
+                 bg-primary hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:shadow-md"
+                            >
+                                0120-4207810
+                            </button>
+                        </a>
                     </div>
+
                 </div>
 
             </div>
