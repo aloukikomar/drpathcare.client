@@ -115,7 +115,7 @@ const FeaturedDiagnostics: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {products.slice(0, 3).map((p) => (
+            {products.slice(0, 6).map((p) => (
               <ProductCard
                 key={p.id}
                 product={p}
