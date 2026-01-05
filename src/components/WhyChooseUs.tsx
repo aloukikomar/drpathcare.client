@@ -18,7 +18,7 @@ const WhyChooseUs: React.FC = () => {
     {
       icon: <Clock className="w-8 h-8" />,
       title: 'Quick Results',
-      description: 'Get your test results within 6-24 hours. Digital reports delivered to your email.',
+      description: 'Get your test results within 24-72 hours. Digital reports delivered to your email.',
       color: 'bg-sky-100 text-sky-600'
     },
     {
